@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LingoSchool LMS — Full Interactive Platform</title>
+  <title>LingoSchool LMS — Professional Academy Edition</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -56,7 +56,7 @@
           <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center font-black text-xl text-slate-900 shadow-lg">L</div>
           <div>
             <h1 class="font-bold text-base leading-tight">LingoSchool</h1>
-            <p class="text-[10px] text-slate-400">Admin LMS Platform</p>
+            <p class="text-[10px] text-slate-400">Academy Platform</p>
           </div>
         </div>
 
@@ -65,7 +65,7 @@
             <i class="fa-solid fa-chart-pie w-4"></i><span>Дашборд</span>
           </button>
           <button onclick="switchTab('courses')" id="nav-courses" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-            <i class="fa-solid fa-book-bookmark w-4"></i><span>Курсы и Уроки</span>
+            <i class="fa-solid fa-book-bookmark w-4"></i><span>Каталог и Курсы</span>
           </button>
           <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
             <i class="fa-solid fa-calendar-check w-4"></i><span>Журнал посещаемости</span>
@@ -111,9 +111,9 @@
       <!-- 1. DASHBOARD TAB -->
       <div id="tabContentDashboard" class="space-y-6">
         <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 rounded-3xl p-6 text-white shadow-lg space-y-2">
-          <p class="text-xs font-medium text-indigo-200">Панель управления LingoSchool LMS</p>
+          <p class="text-xs font-medium text-indigo-200">Академия LingoSchool LMS</p>
           <h3 id="welcomeHeader" class="text-2xl font-black">С возвращением!</h3>
-          <p class="text-xs text-indigo-100 max-w-xl">Управляйте курсами, создавайте встроенные интерактивные уроки с видео и теорией, отслеживайте посещаемость.</p>
+          <p class="text-xs text-indigo-100 max-w-xl">Записывайтесь на курсы, контролируйте прогресс студентов, назначайте преподавателей и проверяйте интерактивные уроки.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -136,12 +136,12 @@
         </div>
       </div>
 
-      <!-- 2. COURSES & LESSON MATERIALS TAB -->
+      <!-- 2. COURSES & ENROLLMENT TAB -->
       <div id="tabContentCourses" class="hidden space-y-6">
         <div class="flex justify-between items-center">
           <div>
-            <h3 class="text-lg font-bold">Курсы и Учебные Уроки</h3>
-            <p class="text-xs text-slate-500">Нажмите на карточку курса, чтобы открыть встроенные уроки, просмотреть видео и выполнить задания</p>
+            <h3 class="text-lg font-bold">Каталог курсов и запись</h3>
+            <p class="text-xs text-slate-500">Записывайтесь на курсы, проходите уроки и отслеживайте прогресс</p>
           </div>
           <button onclick="openCourseModal()" class="admin-only hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
             <i class="fa-solid fa-plus"></i><span>Создать Курс</span>
@@ -273,11 +273,11 @@
     </main>
   </div>
 
-  <!-- MODAL 1: EDIT COURSE & INTEGRATED LESSON BUILDER (For Admins) -->
+  <!-- MODAL 1: EDIT COURSE & TEACHER ASSIGNMENT (For Admins) -->
   <div id="courseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 overflow-y-auto">
     <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-3xl shadow-2xl space-y-6 border border-slate-200 my-8">
       <div class="flex justify-between items-center">
-        <h3 id="modalCourseTitle" class="text-lg font-black text-slate-900">Управление курсом и уроками</h3>
+        <h3 id="modalCourseTitle" class="text-lg font-black text-slate-900">Управление курсом, преподавателем и уроками</h3>
         <button onclick="closeCourseModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
       </div>
 
@@ -287,7 +287,7 @@
           <label class="block text-xs font-bold text-slate-600 mb-1">Название курса</label>
           <input type="text" id="courseTitle" required placeholder="например, Китайский HSK 2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">Категория / Язык</label>
             <select id="courseCategory" class="w-full px-4 py-3 border rounded-xl text-xs font-medium bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
@@ -299,9 +299,15 @@
             <label class="block text-xs font-bold text-slate-600 mb-1">Уровень</label>
             <input type="text" id="courseLevel" required placeholder="HSK 2 или IELTS B2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
           </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Назначить преподавателя</label>
+            <select id="courseTeacher" class="w-full px-4 py-3 border rounded-xl text-xs font-medium bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <!-- Dynamically populated teachers -->
+            </select>
+          </div>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Общее описание программы курса</label>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Описание программы курса</label>
           <textarea id="courseDesc" rows="2" required placeholder="Описание программы обучения..." class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
         </div>
         <div>
@@ -309,30 +315,26 @@
           <input type="text" id="courseSchedule" required placeholder="Вт, Чт 18:00" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
 
-        <!-- BUILT-IN LESSONS BUILDER -->
+        <!-- LESSONS BUILDER -->
         <div class="pt-4 border-t space-y-3">
           <div class="flex justify-between items-center">
-            <h4 class="text-sm font-bold text-indigo-600"><i class="fa-solid fa-layer-group mr-1.5"></i> Конструктор встроенных уроков курса</h4>
-            <button type="button" onclick="addMaterialField()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold">+ Добавить встроенный урок</button>
+            <h4 class="text-sm font-bold text-indigo-600"><i class="fa-solid fa-layer-group mr-1.5"></i> Конструктор уроков курса</h4>
+            <button type="button" onclick="addMaterialField()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold">+ Добавить урок</button>
           </div>
-          <p class="text-[11px] text-slate-500">Создавайте уроки с текстом лекции, встраиваемым видео (YouTube) и домашним заданием прямо внутри платформы.</p>
-          
-          <div id="materialsContainer" class="space-y-4">
-            <!-- Dynamic Lesson Cards -->
-          </div>
+          <div id="materialsContainer" class="space-y-4"></div>
         </div>
 
         <div class="flex space-x-3 pt-4 border-t">
           <button type="button" onclick="closeCourseModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">Отмена</button>
-          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">Сохранить весь курс</button>
+          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">Сохранить курс</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL 2: COURSE CONTENT VIEWER & LESSON LIST -->
+  <!-- MODAL 2: COURSE VIEWER, ENROLLMENT & STUDENT PROGRESS -->
   <div id="courseViewerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
-    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-xl shadow-2xl space-y-6 border border-slate-200 max-h-[85vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-2xl shadow-2xl space-y-6 border border-slate-200 max-h-[85vh] overflow-y-auto">
       <div class="flex justify-between items-start">
         <div>
           <span id="viewerCategory" class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">КАТЕГОРИЯ</span>
@@ -342,17 +344,50 @@
         <button onclick="closeCourseViewer()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
       </div>
 
-      <div class="space-y-2 bg-slate-50 p-4 rounded-2xl border">
-        <p class="text-xs font-bold text-slate-700">Описание программы:</p>
-        <p id="viewerDesc" class="text-xs text-slate-600 leading-relaxed"></p>
-        <div class="text-xs text-indigo-600 font-semibold pt-2"><i class="fa-solid fa-clock mr-1.5"></i> Расписание: <span id="viewerSchedule"></span></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border text-xs">
+        <div>
+          <p class="font-bold text-slate-700">Преподаватель курса:</p>
+          <p id="viewerTeacher" class="text-indigo-600 font-semibold mt-0.5">Не назначен</p>
+        </div>
+        <div>
+          <p class="font-bold text-slate-700">Расписание:</p>
+          <p id="viewerSchedule" class="text-slate-600 font-medium mt-0.5"></p>
+        </div>
+        <div class="sm:col-span-2 pt-2 border-t">
+          <p class="font-bold text-slate-700">Программа:</p>
+          <p id="viewerDesc" class="text-slate-600 mt-0.5 leading-relaxed"></p>
+        </div>
       </div>
 
-      <div class="pt-2 space-y-3">
-        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Доступные интерактивные уроки:</h4>
-        <div id="viewerMaterialsList" class="space-y-2">
-          <!-- Populated dynamically -->
+      <!-- Enrollment & Progress Bar (For Students) -->
+      <div id="studentEnrollmentBox" class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100 flex items-center justify-between">
+        <div>
+          <p id="enrollmentStatusText" class="text-xs font-bold text-indigo-900">Вы еще не записаны на этот курс</p>
+          <p class="text-[10px] text-indigo-700 mt-0.5">Запишитесь, чтобы открыть уроки и отслеживать прогресс обучения</p>
         </div>
+        <button id="enrollBtn" onclick="toggleEnrollment()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow">Записаться на курс</button>
+      </div>
+
+      <!-- Student Progress Bar -->
+      <div id="studentProgressBox" class="space-y-1 hidden">
+        <div class="flex justify-between text-xs font-bold">
+          <span class="text-slate-700">Прогресс прохождения курса</span>
+          <span id="progressPercentText" class="text-indigo-600">0%</span>
+        </div>
+        <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden border">
+          <div id="progressBarFill" class="bg-emerald-500 h-full w-0 transition-all duration-500"></div>
+        </div>
+      </div>
+
+      <!-- Teacher / Admin Student Roster & Progress Tracking -->
+      <div id="teacherStudentsBox" class="space-y-3 pt-2 hidden admin-only">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Студенты на курсе и их прогресс:</h4>
+        <div id="courseStudentsList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+      </div>
+
+      <div class="pt-2 space-y-3 border-t">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Уроки курса:</h4>
+        <div id="viewerMaterialsList" class="space-y-2"></div>
       </div>
     </div>
   </div>
@@ -368,24 +403,21 @@
         <button onclick="closeLessonPlayer()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
       </div>
 
-      <!-- Embedded Video Container -->
       <div id="playerVideoContainer" class="aspect-video w-full bg-slate-900 rounded-2xl overflow-hidden hidden shadow-lg">
         <iframe id="playerIframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
 
-      <!-- Lesson Theory & Content -->
       <div class="space-y-3">
         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Теория и учебный материал:</h4>
         <div id="playerLessonBody" class="p-4 bg-slate-50 rounded-2xl border text-xs text-slate-700 leading-relaxed whitespace-pre-wrap"></div>
       </div>
 
-      <!-- Homework Task & Submission Block -->
       <div class="p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100 space-y-3">
         <h4 class="text-xs font-bold text-indigo-900 flex items-center"><i class="fa-solid fa-pen-clip mr-2"></i>Домашнее задание к уроку:</h4>
         <p id="playerHomeworkTask" class="text-xs text-indigo-800 font-medium"></p>
         <div class="pt-2">
           <textarea id="playerHomeworkInput" rows="2" placeholder="Напишите ответ на задание урока..." class="w-full p-3 border rounded-xl text-xs bg-white"></textarea>
-          <button onclick="submitLessonHomework()" class="mt-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs shadow transition">Отправить ответ на проверку учителю</button>
+          <button onclick="submitLessonHomework()" class="mt-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs shadow transition">Отправить ответ и отметить урок пройденным</button>
         </div>
       </div>
     </div>
@@ -415,7 +447,11 @@
     let authMode = 'login';
     let currentUser = null;
     let currentUserRole = 'student';
+    let currentUserName = '';
     let globalCoursesStore = {};
+    let globalUsersStore = {};
+    let activeCourseId = null;
+    let activeLessonIdx = null;
     let activeLessonObj = null;
 
     window.switchAuthMode = (mode) => {
@@ -453,15 +489,18 @@
         document.getElementById('authScreen').classList.add('hidden');
         document.getElementById('appScreen').classList.remove('hidden');
 
-        onValue(ref(db, 'users/' + user.uid), (snapshot) => {
-          const userData = snapshot.val() || { name: user.email, role: 'student' };
+        // Load all users to get teacher list & student names
+        onValue(ref(db, 'users'), (snapshot) => {
+          globalUsersStore = snapshot.val() || {};
+          const userData = globalUsersStore[user.uid] || { name: user.email, role: 'student' };
           currentUserRole = userData.role;
-          const isAdmin = userData.role === 'admin' || userData.role === 'teacher';
+          currentUserName = userData.name || user.email;
+          const isAdmin = currentUserRole === 'admin' || currentUserRole === 'teacher';
           
-          document.getElementById('profileNameDisplay').innerText = userData.name;
-          document.getElementById('profileRoleDisplay').innerText = userData.role.toUpperCase();
-          document.getElementById('welcomeHeader').innerText = `С возвращением, ${userData.name}!`;
-          document.getElementById('userAvatar').innerText = userData.name.substring(0, 2).toUpperCase();
+          document.getElementById('profileNameDisplay').innerText = currentUserName;
+          document.getElementById('profileRoleDisplay').innerText = currentUserRole.toUpperCase();
+          document.getElementById('welcomeHeader').innerText = `С возвращением, ${currentUserName}!`;
+          document.getElementById('userAvatar').innerText = currentUserName.substring(0, 2).toUpperCase();
 
           document.querySelectorAll('.admin-only').forEach(el => {
             el.classList.toggle('hidden', !isAdmin);
@@ -475,17 +514,26 @@
             loadTeacherSubmissions();
             loadAttendanceJournal();
           }
+          loadTeachersDropdown();
           loadCourses();
         });
       } else {
         currentUser = null;
-        document.getElementById('authScreen').classList.remove('hidden');
-        document.getElementById('appScreen').classList.add('hidden');
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('appScreen').classList.remove('hidden');
       }
     });
 
-    // COURSES & INTEGRATED LESSONS BUILDER
+    function loadTeachersDropdown() {
+      const select = document.getElementById('courseTeacher');
+      if (!select) return;
+      const teachers = Object.values(globalUsersStore).filter(u => u.role === 'teacher' || u.role === 'admin');
+      select.innerHTML = '<option value="">-- Выберите преподавателя --</option>' + teachers.map(t => `<option value="${t.name}">${t.name} (${t.email})</option>`).join('');
+    }
+
+    // COURSES & ENROLLMENT LOGIC
     window.openCourseModal = (courseId = null) => {
+      loadTeachersDropdown();
       const container = document.getElementById('materialsContainer');
       container.innerHTML = '';
 
@@ -495,9 +543,10 @@
         document.getElementById('courseTitle').value = c.title || '';
         document.getElementById('courseCategory').value = c.category || 'КИТАЙСКИЙ ЯЗЫК';
         document.getElementById('courseLevel').value = c.level || '';
+        document.getElementById('courseTeacher').value = c.teacher || '';
         document.getElementById('courseDesc').value = c.desc || '';
         document.getElementById('courseSchedule').value = c.schedule || '';
-        document.getElementById('modalCourseTitle').innerText = 'Редактирование курса и уроков';
+        document.getElementById('modalCourseTitle').innerText = 'Редактирование курса и преподавателя';
 
         if (c.materials && c.materials.length > 0) {
           c.materials.forEach(m => addMaterialField(m.title, m.videoUrl, m.content, m.task));
@@ -508,6 +557,7 @@
         document.getElementById('editCourseId').value = '';
         document.getElementById('courseTitle').value = '';
         document.getElementById('courseLevel').value = '';
+        document.getElementById('courseTeacher').value = '';
         document.getElementById('courseDesc').value = '';
         document.getElementById('courseSchedule').value = '';
         document.getElementById('modalCourseTitle').innerText = 'Создание нового курса';
@@ -525,13 +575,13 @@
       div.className = 'bg-slate-50 p-4 rounded-2xl border space-y-3 relative';
       div.innerHTML = `
         <div class="flex justify-between items-center">
-          <span class="text-xs font-bold text-indigo-600">Встроенный урок</span>
+          <span class="text-xs font-bold text-indigo-600">Урок курса</span>
           <button type="button" onclick="this.parentElement.parentElement.remove()" class="text-rose-400 hover:text-rose-600 text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Удалить урок</button>
         </div>
-        <input type="text" placeholder="Название урока (напр. Урок 1. Тоны и пиньинь)" value="${title}" class="mat-title w-full px-3 py-2 border rounded-xl text-xs font-bold">
-        <input type="text" placeholder="Ссылка на YouTube видео (напр. https://www.youtube.com/watch?v=...)" value="${videoUrl}" class="mat-video w-full px-3 py-2 border rounded-xl text-xs">
-        <textarea rows="3" placeholder="Текст и теория урока (правила, слова, описание)..." class="mat-content w-full p-3 border rounded-xl text-xs">${content}</textarea>
-        <input type="text" placeholder="Задание для домашней работы к уроку..." value="${task}" class="mat-task w-full px-3 py-2 border rounded-xl text-xs bg-white">
+        <input type="text" placeholder="Название урока (напр. Урок 1. Тоны)" value="${title}" class="mat-title w-full px-3 py-2 border rounded-xl text-xs font-bold">
+        <input type="text" placeholder="Ссылка YouTube (необязательно)" value="${videoUrl}" class="mat-video w-full px-3 py-2 border rounded-xl text-xs">
+        <textarea rows="2" placeholder="Теория / материал урока..." class="mat-content w-full p-3 border rounded-xl text-xs">${content}</textarea>
+        <input type="text" placeholder="Домашнее задание к уроку..." value="${task}" class="mat-task w-full px-3 py-2 border rounded-xl text-xs bg-white">
       `;
       container.appendChild(div);
     };
@@ -542,6 +592,7 @@
       const title = document.getElementById('courseTitle').value;
       const category = document.getElementById('courseCategory').value;
       const level = document.getElementById('courseLevel').value;
+      const teacher = document.getElementById('courseTeacher').value;
       const desc = document.getElementById('courseDesc').value;
       const schedule = document.getElementById('courseSchedule').value;
 
@@ -554,11 +605,11 @@
         if (ttl) materials.push({ title: ttl, videoUrl: v, content: c, task: t });
       });
 
-      const courseData = { title, category, level, desc, schedule, materials };
+      const courseData = { title, category, level, teacher, desc, schedule, materials };
 
       if (id) {
         update(ref(db, `courses/${id}`), courseData);
-        alert('Курс и встроенные уроки успешно обновлены!');
+        alert('Курс успешно обновлен!');
       } else {
         push(ref(db, 'courses'), courseData);
         alert('Курс успешно создан в Firebase!');
@@ -584,6 +635,7 @@
         grid.innerHTML = keys.map(key => {
           const c = data[key];
           const mats = c.materials || [];
+          const enrolled = c.students && c.students[currentUser.uid];
 
           return `
             <div onclick="openCourseViewer('${key}')" class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group cursor-pointer hover:border-indigo-500 hover:shadow-md transition">
@@ -595,17 +647,20 @@
                 <h4 class="font-bold text-base text-slate-900 group-hover:text-indigo-600 transition">${c.title}</h4>
                 <p class="text-xs text-slate-500 mt-1 line-clamp-2">${c.desc}</p>
               </div>
+              <div class="text-[11px] font-semibold text-indigo-600">
+                <i class="fa-solid fa-chalkboard-user mr-1"></i> Преподаватель: <span class="text-slate-800">${c.teacher || 'Не назначен'}</span>
+              </div>
               <div class="flex items-center justify-between pt-2">
-                <span class="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
-                  <i class="fa-solid fa-play-circle mr-1"></i> ${mats.length} уроков внутри
+                <span class="text-[11px] font-bold ${enrolled ? 'text-emerald-600 bg-emerald-50' : 'text-slate-500 bg-slate-100'} px-2.5 py-1 rounded-lg">
+                  ${enrolled ? '<i class="fa-solid fa-check mr-1"></i> Вы записаны' : `${mats.length} уроков`}
                 </span>
-                <span class="text-xs font-bold text-slate-400 hover:text-indigo-600">Открыть курс →</span>
+                <span class="text-xs font-bold text-indigo-600 group-hover:underline">Открыть курс →</span>
               </div>
               <div class="pt-3 border-t flex justify-between items-center text-xs text-slate-600 font-semibold">
                 <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i> ${c.schedule}</span>
                 ${isAdmin ? `
                   <div class="flex items-center space-x-2">
-                    <button onclick="event.stopPropagation(); openCourseModal('${key}')" class="px-2.5 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-lg text-[10px] font-bold" title="Редактировать материалы"><i class="fa-solid fa-pen mr-1"></i>Ред.</button>
+                    <button onclick="event.stopPropagation(); openCourseModal('${key}')" class="px-2.5 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-lg text-[10px] font-bold" title="Редактировать"><i class="fa-solid fa-pen mr-1"></i>Ред.</button>
                     <button onclick="event.stopPropagation(); deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash"></i></button>
                   </div>
                 ` : ''}
@@ -617,31 +672,109 @@
     }
 
     window.openCourseViewer = (courseId) => {
+      activeCourseId = courseId;
       if (!globalCoursesStore[courseId]) return;
       const c = globalCoursesStore[courseId];
       const materials = c.materials || [];
+      const isAdmin = currentUserRole === 'admin' || currentUserRole === 'teacher';
 
       document.getElementById('viewerCategory').innerText = c.category;
       document.getElementById('viewerTitle').innerText = c.title;
       document.getElementById('viewerLevel').innerText = c.level;
-      document.getElementById('viewerDesc').innerText = c.desc;
+      document.getElementById('viewerTeacher').innerText = c.teacher || 'Не назначен';
       document.getElementById('viewerSchedule').innerText = c.schedule;
+      document.getElementById('viewerDesc').innerText = c.desc;
 
+      // Enrollment & Progress UI
+      const enrollmentBox = document.getElementById('studentEnrollmentBox');
+      const progressBox = document.getElementById('studentProgressBox');
+      const teacherStudentsBox = document.getElementById('teacherStudentsBox');
+
+      if (isAdmin) {
+        enrollmentBox.classList.add('hidden');
+        progressBox.classList.add('hidden');
+        teacherStudentsBox.classList.remove('hidden');
+
+        // Render students list & their progress
+        const studentsList = document.getElementById('courseStudentsList');
+        const studentsObj = c.students || {};
+        const studentKeys = Object.keys(studentsObj);
+        
+        if (studentKeys.length === 0) {
+          studentsList.innerHTML = '<p class="text-xs text-slate-400">На этот курс еще никто не записался.</p>';
+        } else {
+          studentsList.innerHTML = studentKeys.map(uid => {
+            const st = studentsObj[uid];
+            const completedCount = st.completedLessons ? Object.keys(st.completedLessons).length : 0;
+            const percent = materials.length > 0 ? Math.round((completedCount / materials.length) * 100) : 0;
+            const studentName = globalUsersStore[uid] ? globalUsersStore[uid].name : st.email;
+
+            return `
+              <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border text-xs">
+                <div>
+                  <p class="font-bold text-slate-800">${studentName} (${st.email})</p>
+                  <p class="text-[10px] text-slate-500">Пройдено уроков: ${completedCount} из ${materials.length}</p>
+                </div>
+                <div class="text-right">
+                  <span class="font-black text-indigo-600">${percent}%</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+      } else {
+        teacherStudentsBox.classList.add('hidden');
+        enrollmentBox.classList.remove('hidden');
+
+        const isEnrolled = c.students && c.students[currentUser.uid];
+        const enrollBtn = document.getElementById('enrollBtn');
+        const enrollText = document.getElementById('enrollmentStatusText');
+
+        if (isEnrolled) {
+          enrollText.innerText = 'Вы успешно записаны на этот курс!';
+          enrollBtn.innerText = 'Отписаться';
+          enrollBtn.className = 'px-4 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold rounded-xl text-xs shadow';
+          progressBox.classList.remove('hidden');
+
+          // Calculate student progress
+          const studentData = c.students[currentUser.uid];
+          const completedCount = studentData.completedLessons ? Object.keys(studentData.completedLessons).length : 0;
+          const percent = materials.length > 0 ? Math.round((completedCount / materials.length) * 100) : 0;
+          document.getElementById('progressPercentText').innerText = percent + '%';
+          document.getElementById('progressBarFill').style.width = percent + '%';
+        } else {
+          enrollText.innerText = 'Вы еще не записаны на этот курс';
+          enrollBtn.innerText = 'Записаться на курс';
+          enrollBtn.className = 'px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow';
+          progressBox.classList.add('hidden');
+        }
+      }
+
+      // Render lessons list
       const list = document.getElementById('viewerMaterialsList');
       if (materials.length === 0) {
-        list.innerHTML = '<div class="p-4 bg-slate-50 rounded-xl text-center text-xs text-slate-400">Уроки пока не добавлены преподавателем.</div>';
+        list.innerHTML = '<div class="p-4 bg-slate-50 rounded-xl text-center text-xs text-slate-400">Уроки пока не добавлены.</div>';
       } else {
+        const studentData = (!isAdmin && c.students && c.students[currentUser.uid]) ? c.students[currentUser.uid] : null;
+        const completedMap = studentData && studentData.completedLessons ? studentData.completedLessons : {};
+
         list.innerHTML = materials.map((m, idx) => {
+          const isCompleted = completedMap[idx];
           return `
             <div onclick="openLessonPlayer('${courseId}', ${idx})" class="flex items-center justify-between p-3.5 rounded-xl border bg-white hover:border-indigo-500 hover:shadow-sm transition cursor-pointer group">
               <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 font-bold flex items-center justify-center text-xs">${idx + 1}</div>
+                <div class="w-8 h-8 rounded-lg ${isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-indigo-50 text-indigo-600'} font-bold flex items-center justify-center text-xs">
+                  ${isCompleted ? '<i class="fa-solid fa-check"></i>' : (idx + 1)}
+                </div>
                 <div>
                   <p class="text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition">${m.title}</p>
-                  <p class="text-[10px] text-slate-400">${m.videoUrl ? 'Видеоурок + Теория' : 'Текстовый урок + Задание'}</p>
+                  <p class="text-[10px] text-slate-400">${isCompleted ? 'Пройдено' : 'Доступно к изучению'}</p>
                 </div>
               </div>
-              <button class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow group-hover:bg-indigo-700">Начать урок</button>
+              <button class="px-3 py-1.5 ${isCompleted ? 'bg-emerald-50 text-emerald-700' : 'bg-indigo-600 text-white'} rounded-lg text-xs font-bold shadow group-hover:opacity-90">
+                ${isCompleted ? 'Повторить' : 'Начать урок'}
+              </button>
             </div>
           `;
         }).join('');
@@ -652,18 +785,36 @@
 
     window.closeCourseViewer = () => document.getElementById('courseViewerModal').classList.add('hidden');
 
-    // IN-PLATFORM LESSON PLAYER
+    window.toggleEnrollment = () => {
+      if (!activeCourseId) return;
+      const c = globalCoursesStore[activeCourseId];
+      const students = c.students || {};
+      const isEnrolled = students[currentUser.uid];
+
+      if (isEnrolled) {
+        delete students[currentUser.uid];
+      } else {
+        students[currentUser.uid] = { email: currentUser.email, completedLessons: {} };
+      }
+
+      update(ref(db, `courses/${activeCourseId}`), { students });
+      alert(isEnrolled ? 'Вы отписались от курса.' : 'Вы успешно записались на курс!');
+      openCourseViewer(activeCourseId);
+    };
+
+    // LESSON PLAYER & PROGRESS TRACKING
     window.openLessonPlayer = (courseId, idx) => {
+      activeCourseId = courseId;
+      activeLessonIdx = idx;
       const c = globalCoursesStore[courseId];
       if (!c || !c.materials || !c.materials[idx]) return;
       activeLessonObj = c.materials[idx];
 
       document.getElementById('playerLessonTitle').innerText = activeLessonObj.title;
-      document.getElementById('playerLessonBody').innerText = activeLessonObj.content || 'Теория для этого урока отсутствует.';
-      document.getElementById('playerHomeworkTask').innerText = activeLessonObj.task || 'Выполните упражнения урока и пришлите результат.';
+      document.getElementById('playerLessonBody').innerText = activeLessonObj.content || 'Теория отсутствует.';
+      document.getElementById('playerHomeworkTask').innerText = activeLessonObj.task || 'Выполните упражнение урока.';
       document.getElementById('playerHomeworkInput').value = '';
 
-      // Embedded YouTube helper
       const videoBox = document.getElementById('playerVideoContainer');
       const iframe = document.getElementById('playerIframe');
       if (activeLessonObj.videoUrl) {
@@ -695,6 +846,7 @@
       const comment = document.getElementById('playerHomeworkInput').value;
       if (!comment) { alert('Введите ответ на задание!'); return; }
 
+      // Submit homework
       push(ref(db, 'homeworks'), {
         uid: currentUser.uid,
         email: currentUser.email,
@@ -704,12 +856,24 @@
         status: 'На проверке',
         grade: null
       });
-      alert('Ваша домашняя работа к уроку успешно отправлена преподавателю!');
+
+      // Mark lesson as completed in student progress
+      const c = globalCoursesStore[activeCourseId];
+      if (c && c.students && c.students[currentUser.uid]) {
+        if (!c.students[currentUser.uid].completedLessons) {
+          c.students[currentUser.uid].completedLessons = {};
+        }
+        c.students[currentUser.uid].completedLessons[activeLessonIdx] = true;
+        update(ref(db, `courses/${activeCourseId}/students/${currentUser.uid}`), c.students[currentUser.uid]);
+      }
+
+      alert('ДЗ отправлено, и урок отмечен как пройденный!');
       closeLessonPlayer();
+      openCourseViewer(activeCourseId);
     };
 
     window.deleteCourse = (key) => {
-      if (confirm('Удалить этот курс со всеми материалами?')) {
+      if (confirm('Удалить этот курс?')) {
         remove(ref(db, `courses/${key}`));
       }
     };
