@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LingoSchool LMS — Interactive Course Platform</title>
+  <title>LingoSchool LMS — Full Interactive Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -113,7 +113,7 @@
         <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 rounded-3xl p-6 text-white shadow-lg space-y-2">
           <p class="text-xs font-medium text-indigo-200">Панель управления LingoSchool LMS</p>
           <h3 id="welcomeHeader" class="text-2xl font-black">С возвращением!</h3>
-          <p class="text-xs text-indigo-100 max-w-xl">Управляйте курсами, добавляйте видео и материалы уроков, отслеживайте посещаемость и проверяйте домашние работы.</p>
+          <p class="text-xs text-indigo-100 max-w-xl">Управляйте курсами, создавайте встроенные интерактивные уроки с видео и теорией, отслеживайте посещаемость.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -140,8 +140,8 @@
       <div id="tabContentCourses" class="hidden space-y-6">
         <div class="flex justify-between items-center">
           <div>
-            <h3 class="text-lg font-bold">Курсы и Учебные Материалы</h3>
-            <p class="text-xs text-slate-500">Нажмите на карточку курса, чтобы открыть материалы урока, видео и упражнения</p>
+            <h3 class="text-lg font-bold">Курсы и Учебные Уроки</h3>
+            <p class="text-xs text-slate-500">Нажмите на карточку курса, чтобы открыть встроенные уроки, просмотреть видео и выполнить задания</p>
           </div>
           <button onclick="openCourseModal()" class="admin-only hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
             <i class="fa-solid fa-plus"></i><span>Создать Курс</span>
@@ -185,7 +185,7 @@
         <div id="studentHwPane" class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 max-w-xl">
           <h3 class="text-lg font-bold">Сдача домашнего задания</h3>
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">Комментарий к заданию или ссылка на материал</label>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Комментарий к заданию или выполненная работа</label>
             <textarea id="hwComment" rows="3" placeholder="Выполнила упражнение №3 из урока..." class="w-full p-3 border rounded-xl text-xs"></textarea>
           </div>
           <button onclick="submitHomeworkText()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-indigo-700 shadow">Отправить домашнее задание в базу Firebase</button>
@@ -273,11 +273,11 @@
     </main>
   </div>
 
-  <!-- MODAL 1: EDIT COURSE & MATERIALS (For Admins) -->
+  <!-- MODAL 1: EDIT COURSE & INTEGRATED LESSON BUILDER (For Admins) -->
   <div id="courseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 overflow-y-auto">
-    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-2xl shadow-2xl space-y-6 border border-slate-200 my-8">
+    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-3xl shadow-2xl space-y-6 border border-slate-200 my-8">
       <div class="flex justify-between items-center">
-        <h3 id="modalCourseTitle" class="text-lg font-black text-slate-900">Управление курсом и материалами</h3>
+        <h3 id="modalCourseTitle" class="text-lg font-black text-slate-900">Управление курсом и уроками</h3>
         <button onclick="closeCourseModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
       </div>
 
@@ -301,36 +301,36 @@
           </div>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Описание и программа курса</label>
-          <textarea id="courseDesc" rows="2" required placeholder="Общее описание программы..." class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Общее описание программы курса</label>
+          <textarea id="courseDesc" rows="2" required placeholder="Описание программы обучения..." class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Расписание</label>
           <input type="text" id="courseSchedule" required placeholder="Вт, Чт 18:00" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
 
-        <!-- MATERIALS & LESSONS BUILDER -->
+        <!-- BUILT-IN LESSONS BUILDER -->
         <div class="pt-4 border-t space-y-3">
           <div class="flex justify-between items-center">
-            <h4 class="text-sm font-bold text-indigo-600"><i class="fa-solid fa-folder-open mr-1.5"></i> Учебные материалы, видео и упражнения</h4>
-            <button type="button" onclick="addMaterialField()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold">+ Добавить материал</button>
+            <h4 class="text-sm font-bold text-indigo-600"><i class="fa-solid fa-layer-group mr-1.5"></i> Конструктор встроенных уроков курса</h4>
+            <button type="button" onclick="addMaterialField()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold">+ Добавить встроенный урок</button>
           </div>
-          <p class="text-[11px] text-slate-500">Добавьте ссылки на видеоуроки (YouTube), файлы или упражнения для этого курса.</p>
+          <p class="text-[11px] text-slate-500">Создавайте уроки с текстом лекции, встраиваемым видео (YouTube) и домашним заданием прямо внутри платформы.</p>
           
-          <div id="materialsContainer" class="space-y-3">
-            <!-- Dynamic Material Rows -->
+          <div id="materialsContainer" class="space-y-4">
+            <!-- Dynamic Lesson Cards -->
           </div>
         </div>
 
         <div class="flex space-x-3 pt-4 border-t">
           <button type="button" onclick="closeCourseModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">Отмена</button>
-          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">Сохранить курс и материалы</button>
+          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">Сохранить весь курс</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL 2: COURSE CONTENT VIEWER (For Students & Admin Preview) -->
+  <!-- MODAL 2: COURSE CONTENT VIEWER & LESSON LIST -->
   <div id="courseViewerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
     <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-xl shadow-2xl space-y-6 border border-slate-200 max-h-[85vh] overflow-y-auto">
       <div class="flex justify-between items-start">
@@ -343,15 +343,49 @@
       </div>
 
       <div class="space-y-2 bg-slate-50 p-4 rounded-2xl border">
-        <p class="text-xs font-bold text-slate-700">Описание курса:</p>
+        <p class="text-xs font-bold text-slate-700">Описание программы:</p>
         <p id="viewerDesc" class="text-xs text-slate-600 leading-relaxed"></p>
         <div class="text-xs text-indigo-600 font-semibold pt-2"><i class="fa-solid fa-clock mr-1.5"></i> Расписание: <span id="viewerSchedule"></span></div>
       </div>
 
       <div class="pt-2 space-y-3">
-        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Учебные материалы и уроки:</h4>
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Доступные интерактивные уроки:</h4>
         <div id="viewerMaterialsList" class="space-y-2">
           <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: IN-PLATFORM INTERACTIVE LESSON PLAYER -->
+  <div id="lessonPlayerModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-3xl shadow-2xl space-y-6 border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-3 border-b">
+        <div>
+          <span class="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md uppercase">Интерактивный урок</span>
+          <h3 id="playerLessonTitle" class="text-xl font-black text-slate-900 mt-1">Заголовок Урока</h3>
+        </div>
+        <button onclick="closeLessonPlayer()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
+      </div>
+
+      <!-- Embedded Video Container -->
+      <div id="playerVideoContainer" class="aspect-video w-full bg-slate-900 rounded-2xl overflow-hidden hidden shadow-lg">
+        <iframe id="playerIframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <!-- Lesson Theory & Content -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Теория и учебный материал:</h4>
+        <div id="playerLessonBody" class="p-4 bg-slate-50 rounded-2xl border text-xs text-slate-700 leading-relaxed whitespace-pre-wrap"></div>
+      </div>
+
+      <!-- Homework Task & Submission Block -->
+      <div class="p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100 space-y-3">
+        <h4 class="text-xs font-bold text-indigo-900 flex items-center"><i class="fa-solid fa-pen-clip mr-2"></i>Домашнее задание к уроку:</h4>
+        <p id="playerHomeworkTask" class="text-xs text-indigo-800 font-medium"></p>
+        <div class="pt-2">
+          <textarea id="playerHomeworkInput" rows="2" placeholder="Напишите ответ на задание урока..." class="w-full p-3 border rounded-xl text-xs bg-white"></textarea>
+          <button onclick="submitLessonHomework()" class="mt-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs shadow transition">Отправить ответ на проверку учителю</button>
         </div>
       </div>
     </div>
@@ -382,6 +416,7 @@
     let currentUser = null;
     let currentUserRole = 'student';
     let globalCoursesStore = {};
+    let activeLessonObj = null;
 
     window.switchAuthMode = (mode) => {
       authMode = mode;
@@ -449,7 +484,7 @@
       }
     });
 
-    // COURSES LOGIC
+    // COURSES & INTEGRATED LESSONS BUILDER
     window.openCourseModal = (courseId = null) => {
       const container = document.getElementById('materialsContainer');
       container.innerHTML = '';
@@ -462,10 +497,10 @@
         document.getElementById('courseLevel').value = c.level || '';
         document.getElementById('courseDesc').value = c.desc || '';
         document.getElementById('courseSchedule').value = c.schedule || '';
-        document.getElementById('modalCourseTitle').innerText = 'Редактирование курса и материалов';
+        document.getElementById('modalCourseTitle').innerText = 'Редактирование курса и уроков';
 
         if (c.materials && c.materials.length > 0) {
-          c.materials.forEach(m => addMaterialField(m.title, m.type, m.url));
+          c.materials.forEach(m => addMaterialField(m.title, m.videoUrl, m.content, m.task));
         } else {
           addMaterialField();
         }
@@ -484,60 +519,19 @@
 
     window.closeCourseModal = () => document.getElementById('courseModal').classList.add('hidden');
 
-    window.openCourseViewer = (courseId) => {
-      if (!globalCoursesStore[courseId]) return;
-      const c = globalCoursesStore[courseId];
-      const materials = c.materials || [];
-
-      document.getElementById('viewerCategory').innerText = c.category;
-      document.getElementById('viewerTitle').innerText = c.title;
-      document.getElementById('viewerLevel').innerText = c.level;
-      document.getElementById('viewerDesc').innerText = c.desc;
-      document.getElementById('viewerSchedule').innerText = c.schedule;
-
-      const list = document.getElementById('viewerMaterialsList');
-      if (materials.length === 0) {
-        list.innerHTML = '<div class="p-4 bg-slate-50 rounded-xl text-center text-xs text-slate-400">К этому курсу материалы пока не загружены.</div>';
-      } else {
-        list.innerHTML = materials.map(m => {
-          let icon = 'fa-file-lines text-indigo-500';
-          let badgeColor = 'bg-indigo-50 text-indigo-700';
-          if (m.type === 'video') { icon = 'fa-play-circle text-rose-500'; badgeColor = 'bg-rose-50 text-rose-700'; }
-          if (m.type === 'exercise') { icon = 'fa-pen-to-square text-amber-500'; badgeColor = 'bg-amber-50 text-amber-700'; }
-
-          return `
-            <a href="${m.url || '#'}" target="_blank" class="flex items-center justify-between p-3.5 rounded-xl border bg-white hover:border-indigo-500 hover:shadow-sm transition group">
-              <div class="flex items-center space-x-3">
-                <i class="fa-solid ${icon} text-lg"></i>
-                <div>
-                  <p class="text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition">${m.title}</p>
-                  <span class="text-[9px] font-extrabold px-2 py-0.5 rounded ${badgeColor}">${m.type.toUpperCase()}</span>
-                </div>
-              </div>
-              <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-300 group-hover:text-indigo-500 transition"></i>
-            </a>
-          `;
-        }).join('');
-      }
-
-      document.getElementById('courseViewerModal').classList.remove('hidden');
-    };
-
-    window.closeCourseViewer = () => document.getElementById('courseViewerModal').classList.add('hidden');
-
-    window.addMaterialField = (title = '', type = 'video', url = '') => {
+    window.addMaterialField = (title = '', videoUrl = '', content = '', task = '') => {
       const container = document.getElementById('materialsContainer');
       const div = document.createElement('div');
-      div.className = 'flex gap-2 items-center bg-slate-50 p-3 rounded-xl border';
+      div.className = 'bg-slate-50 p-4 rounded-2xl border space-y-3 relative';
       div.innerHTML = `
-        <select class="mat-type px-2 py-2 border rounded-lg text-xs bg-white font-medium">
-          <option value="video" ${type==='video'?'selected':''}>Видео (YouTube)</option>
-          <option value="file" ${type==='file'?'selected':''}>Документ / Файл</option>
-          <option value="exercise" ${type==='exercise'?'selected':''}>Упражнение / Тест</option>
-        </select>
-        <input type="text" placeholder="Название (напр. Урок 1)" value="${title}" class="mat-title flex-1 px-3 py-2 border rounded-lg text-xs">
-        <input type="text" placeholder="Ссылка (URL)" value="${url}" class="mat-url flex-1 px-3 py-2 border rounded-lg text-xs">
-        <button type="button" onclick="this.parentElement.remove()" class="text-rose-400 hover:text-rose-600 px-2"><i class="fa-solid fa-trash"></i></button>
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-bold text-indigo-600">Встроенный урок</span>
+          <button type="button" onclick="this.parentElement.parentElement.remove()" class="text-rose-400 hover:text-rose-600 text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Удалить урок</button>
+        </div>
+        <input type="text" placeholder="Название урока (напр. Урок 1. Тоны и пиньинь)" value="${title}" class="mat-title w-full px-3 py-2 border rounded-xl text-xs font-bold">
+        <input type="text" placeholder="Ссылка на YouTube видео (напр. https://www.youtube.com/watch?v=...)" value="${videoUrl}" class="mat-video w-full px-3 py-2 border rounded-xl text-xs">
+        <textarea rows="3" placeholder="Текст и теория урока (правила, слова, описание)..." class="mat-content w-full p-3 border rounded-xl text-xs">${content}</textarea>
+        <input type="text" placeholder="Задание для домашней работы к уроку..." value="${task}" class="mat-task w-full px-3 py-2 border rounded-xl text-xs bg-white">
       `;
       container.appendChild(div);
     };
@@ -553,17 +547,18 @@
 
       const materials = [];
       document.querySelectorAll('#materialsContainer > div').forEach(row => {
-        const t = row.querySelector('.mat-type').value;
         const ttl = row.querySelector('.mat-title').value;
-        const u = row.querySelector('.mat-url').value;
-        if (ttl) materials.push({ type: t, title: ttl, url: u });
+        const v = row.querySelector('.mat-video').value;
+        const c = row.querySelector('.mat-content').value;
+        const t = row.querySelector('.mat-task').value;
+        if (ttl) materials.push({ title: ttl, videoUrl: v, content: c, task: t });
       });
 
       const courseData = { title, category, level, desc, schedule, materials };
 
       if (id) {
         update(ref(db, `courses/${id}`), courseData);
-        alert('Курс и учебные материалы успешно обновлены!');
+        alert('Курс и встроенные уроки успешно обновлены!');
       } else {
         push(ref(db, 'courses'), courseData);
         alert('Курс успешно создан в Firebase!');
@@ -602,7 +597,7 @@
               </div>
               <div class="flex items-center justify-between pt-2">
                 <span class="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
-                  <i class="fa-solid fa-folder-open mr-1"></i> ${mats.length} материалов
+                  <i class="fa-solid fa-play-circle mr-1"></i> ${mats.length} уроков внутри
                 </span>
                 <span class="text-xs font-bold text-slate-400 hover:text-indigo-600">Открыть курс →</span>
               </div>
@@ -620,6 +615,98 @@
         }).join('');
       });
     }
+
+    window.openCourseViewer = (courseId) => {
+      if (!globalCoursesStore[courseId]) return;
+      const c = globalCoursesStore[courseId];
+      const materials = c.materials || [];
+
+      document.getElementById('viewerCategory').innerText = c.category;
+      document.getElementById('viewerTitle').innerText = c.title;
+      document.getElementById('viewerLevel').innerText = c.level;
+      document.getElementById('viewerDesc').innerText = c.desc;
+      document.getElementById('viewerSchedule').innerText = c.schedule;
+
+      const list = document.getElementById('viewerMaterialsList');
+      if (materials.length === 0) {
+        list.innerHTML = '<div class="p-4 bg-slate-50 rounded-xl text-center text-xs text-slate-400">Уроки пока не добавлены преподавателем.</div>';
+      } else {
+        list.innerHTML = materials.map((m, idx) => {
+          return `
+            <div onclick="openLessonPlayer('${courseId}', ${idx})" class="flex items-center justify-between p-3.5 rounded-xl border bg-white hover:border-indigo-500 hover:shadow-sm transition cursor-pointer group">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 font-bold flex items-center justify-center text-xs">${idx + 1}</div>
+                <div>
+                  <p class="text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition">${m.title}</p>
+                  <p class="text-[10px] text-slate-400">${m.videoUrl ? 'Видеоурок + Теория' : 'Текстовый урок + Задание'}</p>
+                </div>
+              </div>
+              <button class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow group-hover:bg-indigo-700">Начать урок</button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('courseViewerModal').classList.remove('hidden');
+    };
+
+    window.closeCourseViewer = () => document.getElementById('courseViewerModal').classList.add('hidden');
+
+    // IN-PLATFORM LESSON PLAYER
+    window.openLessonPlayer = (courseId, idx) => {
+      const c = globalCoursesStore[courseId];
+      if (!c || !c.materials || !c.materials[idx]) return;
+      activeLessonObj = c.materials[idx];
+
+      document.getElementById('playerLessonTitle').innerText = activeLessonObj.title;
+      document.getElementById('playerLessonBody').innerText = activeLessonObj.content || 'Теория для этого урока отсутствует.';
+      document.getElementById('playerHomeworkTask').innerText = activeLessonObj.task || 'Выполните упражнения урока и пришлите результат.';
+      document.getElementById('playerHomeworkInput').value = '';
+
+      // Embedded YouTube helper
+      const videoBox = document.getElementById('playerVideoContainer');
+      const iframe = document.getElementById('playerIframe');
+      if (activeLessonObj.videoUrl) {
+        let videoId = '';
+        const match = activeLessonObj.videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+        if (match && match[1]) videoId = match[1];
+        
+        if (videoId) {
+          iframe.src = `https://www.youtube.com/embed/${videoId}`;
+          videoBox.classList.remove('hidden');
+        } else {
+          videoBox.classList.add('hidden');
+          iframe.src = '';
+        }
+      } else {
+        videoBox.classList.add('hidden');
+        iframe.src = '';
+      }
+
+      document.getElementById('lessonPlayerModal').classList.remove('hidden');
+    };
+
+    window.closeLessonPlayer = () => {
+      document.getElementById('playerIframe').src = '';
+      document.getElementById('lessonPlayerModal').classList.add('hidden');
+    };
+
+    window.submitLessonHomework = () => {
+      const comment = document.getElementById('playerHomeworkInput').value;
+      if (!comment) { alert('Введите ответ на задание!'); return; }
+
+      push(ref(db, 'homeworks'), {
+        uid: currentUser.uid,
+        email: currentUser.email,
+        comment: `Урок: "${activeLessonObj.title}". Ответ: ${comment}`,
+        img: null,
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        status: 'На проверке',
+        grade: null
+      });
+      alert('Ваша домашняя работа к уроку успешно отправлена преподавателю!');
+      closeLessonPlayer();
+    };
 
     window.deleteCourse = (key) => {
       if (confirm('Удалить этот курс со всеми материалами?')) {
