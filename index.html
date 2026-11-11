@@ -149,35 +149,7 @@
         </div>
 
         <div id="coursesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
-            <div class="flex justify-between items-start">
-              <span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">КИТАЙСКИЙ ЯЗЫК</span>
-              <span class="text-xs font-semibold text-slate-400">HSK 1</span>
-            </div>
-            <div>
-              <h4 class="font-bold text-base text-slate-900">HSK 1 — Интенсивный курс</h4>
-              <p class="text-xs text-slate-500 mt-1">Изучение 150 базовых иероглифов, фонетики Pinyin и тонов.</p>
-            </div>
-            <div class="pt-3 border-t flex justify-between items-center text-xs text-slate-600 font-semibold">
-              <span><i class="fa-solid fa-user-group text-slate-400 mr-1"></i> 12 Учеников</span>
-              <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i> Пн, Ср 16:00</span>
-            </div>
-          </div>
-
-          <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
-            <div class="flex justify-between items-start">
-              <span class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">АНГЛИЙСКИЙ ЯЗЫК</span>
-              <span class="text-xs font-semibold text-slate-400">B1-B2</span>
-            </div>
-            <div>
-              <h4 class="font-bold text-base text-slate-900">General English & IELTS Prep</h4>
-              <p class="text-xs text-slate-500 mt-1">Разговорная практика, грамматика и подготовка к IELTS 7.0+.</p>
-            </div>
-            <div class="pt-3 border-t flex justify-between items-center text-xs text-slate-600 font-semibold">
-              <span><i class="fa-solid fa-user-group text-slate-400 mr-1"></i> 18 Учеников</span>
-              <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i> Вт, Чт 18:00</span>
-            </div>
-          </div>
+          <!-- Dynamically populated from Firebase Courses -->
         </div>
       </div>
 
@@ -275,11 +247,52 @@
     </main>
   </div>
 
+  <!-- MODAL: CREATE COURSE -->
+  <div id="courseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-lg shadow-2xl space-y-6 border border-slate-200">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black text-slate-900">Создание нового курса</h3>
+        <button onclick="closeCourseModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
+      </div>
+
+      <form onsubmit="handleCreateCourse(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Название курса</label>
+          <input type="text" id="courseTitle" required placeholder="например, Китайский HSK 2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Категория / Язык</label>
+          <select id="courseCategory" class="w-full px-4 py-3 border rounded-xl text-xs font-medium bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <option value="КИТАЙСКИЙ ЯЗЫК">Китайский язык</option>
+            <option value="АНГЛИЙСКИЙ ЯЗЫК">Английский язык</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Уровень</label>
+          <input type="text" id="courseLevel" required placeholder="например, HSK 2 или IELTS B2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Описание</label>
+          <textarea id="courseDesc" rows="3" required placeholder="Краткое описание программы обучения..." class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Расписание занятий</label>
+          <input type="text" id="courseSchedule" required placeholder="Вт, Чт 18:00" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="flex space-x-3 pt-2">
+          <button type="button" onclick="closeCourseModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">Отмена</button>
+          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">Создать курс</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Firebase Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCpJadbzfeAYmdlt25H_ZZEVDluxc0ipNY",
@@ -316,7 +329,6 @@
       try {
         if (authMode === 'register') {
           const cred = await createUserWithEmailAndPassword(auth, email, pass);
-          // Default role is student unless admin assigns otherwise in DB
           await set(ref(db, 'users/' + cred.user.uid), { name, email, role: 'student' });
           alert('Регистрация прошла успешно!');
         } else {
@@ -356,6 +368,7 @@
             loadTeacherSubmissions();
             loadAttendanceJournal();
           }
+          loadCourses();
         });
       } else {
         currentUser = null;
@@ -363,6 +376,63 @@
         document.getElementById('appScreen').classList.add('hidden');
       }
     });
+
+    // COURSES LOGIC
+    window.openCourseModal = () => document.getElementById('courseModal').classList.remove('hidden');
+    window.closeCourseModal = () => document.getElementById('courseModal').classList.add('hidden');
+
+    window.handleCreateCourse = (e) => {
+      e.preventDefault();
+      const title = document.getElementById('courseTitle').value;
+      const category = document.getElementById('courseCategory').value;
+      const level = document.getElementById('courseLevel').value;
+      const desc = document.getElementById('courseDesc').value;
+      const schedule = document.getElementById('courseSchedule').value;
+
+      push(ref(db, 'courses'), { title, category, level, desc, schedule });
+      alert('Курс успешно создан и сохранен в Firebase!');
+      closeCourseModal();
+      e.target.reset();
+    };
+
+    function loadCourses() {
+      onValue(ref(db, 'courses'), (snapshot) => {
+        const data = snapshot.val();
+        const grid = document.getElementById('coursesGrid');
+        if (!data) {
+          grid.innerHTML = '<p class="text-xs text-slate-400">Нет созданных курсов.</p>';
+          document.getElementById('statCoursesCount').innerText = '0';
+          return;
+        }
+        const keys = Object.keys(data);
+        document.getElementById('statCoursesCount').innerText = keys.length;
+        grid.innerHTML = keys.map(key => {
+          const c = data[key];
+          return `
+            <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group">
+              <div class="flex justify-between items-start">
+                <span class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">${c.category}</span>
+                <span class="text-xs font-semibold text-slate-400">${c.level}</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-base text-slate-900">${c.title}</h4>
+                <p class="text-xs text-slate-500 mt-1">${c.desc}</p>
+              </div>
+              <div class="pt-3 border-t flex justify-between items-center text-xs text-slate-600 font-semibold">
+                <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i> ${c.schedule}</span>
+                <button onclick="deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600 admin-only hidden"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      });
+    }
+
+    window.deleteCourse = (key) => {
+      if (confirm('Удалить этот курс?')) {
+        remove(ref(db, `courses/${key}`));
+      }
+    };
 
     function loadAllUsersAdmin() {
       onValue(ref(db, 'users'), (snapshot) => {
