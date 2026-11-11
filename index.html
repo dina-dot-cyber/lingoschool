@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LingoSchool LMS — Full Pro Edition</title>
+  <title>LingoSchool LMS — Interactive Course Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -141,7 +141,7 @@
         <div class="flex justify-between items-center">
           <div>
             <h3 class="text-lg font-bold">Курсы и Учебные Материалы</h3>
-            <p class="text-xs text-slate-500">Нажмите на курс, чтобы открыть программу, видеоуроки, упражнения и файлы</p>
+            <p class="text-xs text-slate-500">Нажмите на карточку курса, чтобы открыть материалы урока, видео и упражнения</p>
           </div>
           <button onclick="openCourseModal()" class="admin-only hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
             <i class="fa-solid fa-plus"></i><span>Создать Курс</span>
@@ -238,7 +238,7 @@
               <button onclick="speakCurrentHanzi()" class="w-full bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold hover:bg-indigo-700">Озвучить</button>
             </div>
 
-            <!-- Character Switcher & Creator (Admin only or all) -->
+            <!-- Character Switcher & Creator -->
             <div class="space-y-3 pt-4 border-t">
               <label class="block text-xs font-bold text-slate-700">Выберите иероглиф для прописи:</label>
               <select id="hanziSelector" onchange="selectHanziChar(this.value)" class="w-full px-3 py-2 border rounded-xl text-xs font-medium bg-white">
@@ -273,7 +273,7 @@
     </main>
   </div>
 
-  <!-- MODAL: CREATE / EDIT COURSE & MATERIALS -->
+  <!-- MODAL 1: EDIT COURSE & MATERIALS (For Admins) -->
   <div id="courseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 overflow-y-auto">
     <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-2xl shadow-2xl space-y-6 border border-slate-200 my-8">
       <div class="flex justify-between items-center">
@@ -315,7 +315,7 @@
             <h4 class="text-sm font-bold text-indigo-600"><i class="fa-solid fa-folder-open mr-1.5"></i> Учебные материалы, видео и упражнения</h4>
             <button type="button" onclick="addMaterialField()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold">+ Добавить материал</button>
           </div>
-          <p class="text-[11px] text-slate-500">Добавьте ссылки на видеоуроки (YouTube), файлы или интерактивные упражнения для этого курса.</p>
+          <p class="text-[11px] text-slate-500">Добавьте ссылки на видеоуроки (YouTube), файлы или упражнения для этого курса.</p>
           
           <div id="materialsContainer" class="space-y-3">
             <!-- Dynamic Material Rows -->
@@ -330,9 +330,9 @@
     </div>
   </div>
 
-  <!-- COURSE VIEWER MODAL (For Students & Teachers) -->
+  <!-- MODAL 2: COURSE CONTENT VIEWER (For Students & Admin Preview) -->
   <div id="courseViewerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
-    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-xl shadow-2xl space-y-6 border border-slate-200 max-h-[80vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-xl shadow-2xl space-y-6 border border-slate-200 max-h-[85vh] overflow-y-auto">
       <div class="flex justify-between items-start">
         <div>
           <span id="viewerCategory" class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">КАТЕГОРИЯ</span>
@@ -342,13 +342,14 @@
         <button onclick="closeCourseViewer()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
       </div>
 
-      <div class="space-y-3">
+      <div class="space-y-2 bg-slate-50 p-4 rounded-2xl border">
+        <p class="text-xs font-bold text-slate-700">Описание курса:</p>
         <p id="viewerDesc" class="text-xs text-slate-600 leading-relaxed"></p>
-        <div class="text-xs text-slate-500 font-semibold flex items-center"><i class="fa-solid fa-clock text-indigo-500 mr-2"></i><span id="viewerSchedule"></span></div>
+        <div class="text-xs text-indigo-600 font-semibold pt-2"><i class="fa-solid fa-clock mr-1.5"></i> Расписание: <span id="viewerSchedule"></span></div>
       </div>
 
-      <div class="pt-4 border-t space-y-3">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Материалы и уроки курса:</h4>
+      <div class="pt-2 space-y-3">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Учебные материалы и уроки:</h4>
         <div id="viewerMaterialsList" class="space-y-2">
           <!-- Populated dynamically -->
         </div>
@@ -380,6 +381,7 @@
     let authMode = 'login';
     let currentUser = null;
     let currentUserRole = 'student';
+    let globalCoursesStore = {};
 
     window.switchAuthMode = (mode) => {
       authMode = mode;
@@ -447,21 +449,33 @@
       }
     });
 
-    // COURSES & MATERIALS LOGIC
-    window.openCourseModal = (courseId = null, title = '', category = 'КИТАЙСКИЙ ЯЗЫК', level = '', desc = '', schedule = '', materials = []) => {
-      document.getElementById('editCourseId').value = courseId || '';
-      document.getElementById('courseTitle').value = title;
-      document.getElementById('courseCategory').value = category;
-      document.getElementById('courseLevel').value = level;
-      document.getElementById('courseDesc').value = desc;
-      document.getElementById('courseSchedule').value = schedule;
-      document.getElementById('modalCourseTitle').innerText = courseId ? 'Редактирование курса и материалов' : 'Создание нового курса';
-      
+    // COURSES LOGIC
+    window.openCourseModal = (courseId = null) => {
       const container = document.getElementById('materialsContainer');
       container.innerHTML = '';
-      if (materials && materials.length > 0) {
-        materials.forEach(m => addMaterialField(m.title, m.type, m.url));
+
+      if (courseId && globalCoursesStore[courseId]) {
+        const c = globalCoursesStore[courseId];
+        document.getElementById('editCourseId').value = courseId;
+        document.getElementById('courseTitle').value = c.title || '';
+        document.getElementById('courseCategory').value = c.category || 'КИТАЙСКИЙ ЯЗЫК';
+        document.getElementById('courseLevel').value = c.level || '';
+        document.getElementById('courseDesc').value = c.desc || '';
+        document.getElementById('courseSchedule').value = c.schedule || '';
+        document.getElementById('modalCourseTitle').innerText = 'Редактирование курса и материалов';
+
+        if (c.materials && c.materials.length > 0) {
+          c.materials.forEach(m => addMaterialField(m.title, m.type, m.url));
+        } else {
+          addMaterialField();
+        }
       } else {
+        document.getElementById('editCourseId').value = '';
+        document.getElementById('courseTitle').value = '';
+        document.getElementById('courseLevel').value = '';
+        document.getElementById('courseDesc').value = '';
+        document.getElementById('courseSchedule').value = '';
+        document.getElementById('modalCourseTitle').innerText = 'Создание нового курса';
         addMaterialField();
       }
 
@@ -469,6 +483,47 @@
     };
 
     window.closeCourseModal = () => document.getElementById('courseModal').classList.add('hidden');
+
+    window.openCourseViewer = (courseId) => {
+      if (!globalCoursesStore[courseId]) return;
+      const c = globalCoursesStore[courseId];
+      const materials = c.materials || [];
+
+      document.getElementById('viewerCategory').innerText = c.category;
+      document.getElementById('viewerTitle').innerText = c.title;
+      document.getElementById('viewerLevel').innerText = c.level;
+      document.getElementById('viewerDesc').innerText = c.desc;
+      document.getElementById('viewerSchedule').innerText = c.schedule;
+
+      const list = document.getElementById('viewerMaterialsList');
+      if (materials.length === 0) {
+        list.innerHTML = '<div class="p-4 bg-slate-50 rounded-xl text-center text-xs text-slate-400">К этому курсу материалы пока не загружены.</div>';
+      } else {
+        list.innerHTML = materials.map(m => {
+          let icon = 'fa-file-lines text-indigo-500';
+          let badgeColor = 'bg-indigo-50 text-indigo-700';
+          if (m.type === 'video') { icon = 'fa-play-circle text-rose-500'; badgeColor = 'bg-rose-50 text-rose-700'; }
+          if (m.type === 'exercise') { icon = 'fa-pen-to-square text-amber-500'; badgeColor = 'bg-amber-50 text-amber-700'; }
+
+          return `
+            <a href="${m.url || '#'}" target="_blank" class="flex items-center justify-between p-3.5 rounded-xl border bg-white hover:border-indigo-500 hover:shadow-sm transition group">
+              <div class="flex items-center space-x-3">
+                <i class="fa-solid ${icon} text-lg"></i>
+                <div>
+                  <p class="text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition">${m.title}</p>
+                  <span class="text-[9px] font-extrabold px-2 py-0.5 rounded ${badgeColor}">${m.type.toUpperCase()}</span>
+                </div>
+              </div>
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-300 group-hover:text-indigo-500 transition"></i>
+            </a>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('courseViewerModal').classList.remove('hidden');
+    };
+
+    window.closeCourseViewer = () => document.getElementById('courseViewerModal').classList.add('hidden');
 
     window.addMaterialField = (title = '', type = 'video', url = '') => {
       const container = document.getElementById('materialsContainer');
@@ -496,7 +551,6 @@
       const desc = document.getElementById('courseDesc').value;
       const schedule = document.getElementById('courseSchedule').value;
 
-      // Collect materials
       const materials = [];
       document.querySelectorAll('#materialsContainer > div').forEach(row => {
         const t = row.querySelector('.mat-type').value;
@@ -521,6 +575,7 @@
     function loadCourses() {
       onValue(ref(db, 'courses'), (snapshot) => {
         const data = snapshot.val();
+        globalCoursesStore = data || {};
         const grid = document.getElementById('coursesGrid');
         if (!data) {
           grid.innerHTML = '<p class="text-xs text-slate-400">Нет созданных курсов.</p>';
@@ -534,71 +589,37 @@
         grid.innerHTML = keys.map(key => {
           const c = data[key];
           const mats = c.materials || [];
-          // If admin, click opens editor; if student, click opens viewer
-          const clickAction = isAdmin 
-            ? `openCourseModal('${key}', '${c.title.replace(/'/g, "\'")}', '${c.category}', '${c.level.replace(/'/g, "\'")}', '${c.desc.replace(/'/g, "\'")}', '${c.schedule}', ${JSON.stringify(mats).replace(/'/g, "\'")})`
-            : `openCourseViewer('${c.title.replace(/'/g, "\'")}', '${c.category}', '${c.level.replace(/'/g, "\'")}', '${c.desc.replace(/'/g, "\'")}', '${c.schedule}', ${JSON.stringify(mats).replace(/'/g, "\'")})`;
 
           return `
-            <div onclick="${clickAction}" class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group cursor-pointer hover:border-indigo-500 hover:shadow-md transition">
+            <div onclick="openCourseViewer('${key}')" class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group cursor-pointer hover:border-indigo-500 hover:shadow-md transition">
               <div class="flex justify-between items-start">
                 <span class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">${c.category}</span>
                 <span class="text-xs font-semibold text-slate-400">${c.level}</span>
               </div>
               <div>
-                <h4 class="font-bold text-base text-slate-900">${c.title}</h4>
+                <h4 class="font-bold text-base text-slate-900 group-hover:text-indigo-600 transition">${c.title}</h4>
                 <p class="text-xs text-slate-500 mt-1 line-clamp-2">${c.desc}</p>
               </div>
-              <div class="flex items-center space-x-2 text-[11px] font-semibold text-indigo-600">
-                <i class="fa-solid fa-folder-open"></i><span>${mats.length} материалов (видео/файлы)</span>
+              <div class="flex items-center justify-between pt-2">
+                <span class="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
+                  <i class="fa-solid fa-folder-open mr-1"></i> ${mats.length} материалов
+                </span>
+                <span class="text-xs font-bold text-slate-400 hover:text-indigo-600">Открыть курс →</span>
               </div>
               <div class="pt-3 border-t flex justify-between items-center text-xs text-slate-600 font-semibold">
                 <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i> ${c.schedule}</span>
-                ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>` : '<span class="text-indigo-600 font-bold">Открыть →</span>'}
+                ${isAdmin ? `
+                  <div class="flex items-center space-x-2">
+                    <button onclick="event.stopPropagation(); openCourseModal('${key}')" class="px-2.5 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-lg text-[10px] font-bold" title="Редактировать материалы"><i class="fa-solid fa-pen mr-1"></i>Ред.</button>
+                    <button onclick="event.stopPropagation(); deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash"></i></button>
+                  </div>
+                ` : ''}
               </div>
             </div>
           `;
         }).join('');
       });
     }
-
-    window.openCourseViewer = (title, category, level, desc, schedule, materials) => {
-      document.getElementById('viewerCategory').innerText = category;
-      document.getElementById('viewerTitle').innerText = title;
-      document.getElementById('viewerLevel').innerText = level;
-      document.getElementById('viewerDesc').innerText = desc;
-      document.getElementById('viewerSchedule').innerText = schedule;
-
-      const list = document.getElementById('viewerMaterialsList');
-      if (!materials || materials.length === 0) {
-        list.innerHTML = '<p class="text-xs text-slate-400">К этому курсу материалы пока не добавлены.</p>';
-      } else {
-        list.innerHTML = materials.map(m => {
-          let icon = 'fa-file-lines';
-          let badgeColor = 'bg-slate-100 text-slate-700';
-          if (m.type === 'video') { icon = 'fa-play-circle text-rose-500'; badgeColor = 'bg-rose-50 text-rose-700'; }
-          if (m.type === 'exercise') { icon = 'fa-pen-to-square text-amber-500'; badgeColor = 'bg-amber-50 text-amber-700'; }
-          if (m.type === 'file') { icon = 'fa-file-arrow-down text-indigo-500'; badgeColor = 'bg-indigo-50 text-indigo-700'; }
-
-          return `
-            <a href="${m.url || '#'}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border bg-slate-50 hover:bg-slate-100 transition">
-              <div class="flex items-center space-x-3">
-                <i class="fa-solid ${icon} text-base"></i>
-                <div>
-                  <p class="text-xs font-bold text-slate-800">${m.title}</p>
-                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded ${badgeColor}">${m.type.toUpperCase()}</span>
-                </div>
-              </div>
-              <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i>
-            </a>
-          `;
-        }).join('');
-      }
-
-      document.getElementById('courseViewerModal').classList.remove('hidden');
-    };
-
-    window.closeCourseViewer = () => document.getElementById('courseViewerModal').classList.add('hidden');
 
     window.deleteCourse = (key) => {
       if (confirm('Удалить этот курс со всеми материалами?')) {
