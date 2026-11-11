@@ -148,9 +148,7 @@
           </button>
         </div>
 
-        <div id="coursesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Populated dynamically -->
-        </div>
+        <div id="coursesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </div>
 
       <!-- 3. ATTENDANCE JOURNAL TAB -->
@@ -257,7 +255,7 @@
     </main>
   </div>
 
-  <!-- MODAL 1: ADVANCED COURSE & INTERACTIVE LESSON BUILDER -->
+  <!-- MODAL 1: COURSE BUILDER -->
   <div id="courseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 overflow-y-auto">
     <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-4xl shadow-2xl space-y-6 border border-slate-200 my-8">
       <div class="flex justify-between items-center">
@@ -297,10 +295,9 @@
           <input type="text" id="courseSchedule" required placeholder="Вт, Чт 18:00" class="w-full px-4 py-3 border rounded-xl text-xs font-medium">
         </div>
 
-        <!-- INTERACTIVE LESSONS BUILDER -->
         <div class="pt-4 border-t space-y-4">
           <div class="flex justify-between items-center">
-            <h4 class="text-sm font-bold text-indigo-600"><i class="fa-solid fa-shapes mr-1.5"></i> Конструктор интерактивных уроков с мультимедиа</h4>
+            <h4 class="text-sm font-bold text-indigo-600"><i class="fa-solid fa-shapes mr-1.5"></i> Конструктор уроков</h4>
             <button type="button" onclick="addLessonBlock()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold">+ Добавить урок</button>
           </div>
           <div id="lessonsContainer" class="space-y-6"></div>
@@ -314,7 +311,7 @@
     </div>
   </div>
 
-  <!-- MODAL 2: COURSE VIEWER & ENROLLMENT -->
+  <!-- MODAL 2: COURSE VIEWER -->
   <div id="courseViewerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
     <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-2xl shadow-2xl space-y-6 border border-slate-200 max-h-[85vh] overflow-y-auto">
       <div class="flex justify-between items-start">
@@ -367,7 +364,7 @@
     </div>
   </div>
 
-  <!-- MODAL 3: INTERACTIVE MULTIMEDIA LESSON PLAYER -->
+  <!-- MODAL 3: LESSON PLAYER -->
   <div id="lessonPlayerModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
     <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-3xl shadow-2xl space-y-6 border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center pb-3 border-b">
@@ -378,52 +375,45 @@
         <button onclick="closeLessonPlayer()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
       </div>
 
-      <!-- 1. YouTube Video Container -->
       <div id="playerVideoContainer" class="aspect-video w-full bg-slate-900 rounded-2xl overflow-hidden hidden shadow-lg">
         <iframe id="playerIframe" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
       </div>
 
-      <!-- 2. Image / Infographic Container -->
       <div id="playerImageContainer" class="hidden rounded-2xl overflow-hidden border shadow-sm text-center">
         <img id="playerImg" src="" class="max-h-72 mx-auto object-contain p-2">
       </div>
 
-      <!-- 3. Audio Player Container -->
       <div id="playerAudioContainer" class="p-4 bg-amber-50 rounded-2xl border border-amber-200 hidden space-y-2">
-        <p class="text-xs font-bold text-amber-900"><i class="fa-solid fa-volume-high mr-2"></i>Аудиоматериал урока:</p>
+        <p class="text-xs font-bold text-amber-900"><i class="fa-solid fa-volume-high mr-2"></i>Аудиоматериал:</p>
         <audio id="playerAudio" controls class="w-full"></audio>
       </div>
 
-      <!-- 4. Theory / Text Content -->
       <div class="space-y-2">
         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Теория / Описание:</h4>
         <div id="playerLessonBody" class="p-4 bg-slate-50 rounded-2xl border text-xs text-slate-700 leading-relaxed whitespace-pre-wrap"></div>
       </div>
 
-      <!-- 5. Interactive Quiz / Poll Block -->
       <div id="playerQuizBox" class="p-5 bg-indigo-50 rounded-2xl border border-indigo-100 hidden space-y-3">
-        <h4 class="text-xs font-bold text-indigo-900"><i class="fa-solid fa-circle-question mr-1.5"></i> Интерактивный опрос / Тест:</h4>
+        <h4 class="text-xs font-bold text-indigo-900"><i class="fa-solid fa-circle-question mr-1.5"></i> Опрос / Тест:</h4>
         <p id="playerQuizQuestion" class="text-xs font-semibold text-slate-800"></p>
         <div id="playerQuizOptions" class="space-y-2"></div>
       </div>
 
-      <!-- 6. Fill-in-the-blanks / Word Choice Block -->
       <div id="playerFillBox" class="p-5 bg-purple-50 rounded-2xl border border-purple-100 hidden space-y-3">
-        <h4 class="text-xs font-bold text-purple-900"><i class="fa-solid fa-pen-nib mr-1.5"></i> Вставка слова / Задание:</h4>
+        <h4 class="text-xs font-bold text-purple-900"><i class="fa-solid fa-pen-nib mr-1.5"></i> Вставка слова:</h4>
         <p id="playerFillPrompt" class="text-xs text-slate-700"></p>
-        <input type="text" id="playerFillInput" placeholder="Введите правильное слово или ответ..." class="w-full p-3 border rounded-xl text-xs bg-white">
+        <input type="text" id="playerFillInput" placeholder="Введите ответ..." class="w-full p-3 border rounded-xl text-xs bg-white">
       </div>
 
-      <!-- Homework submission -->
       <div class="p-5 bg-slate-50 rounded-2xl border space-y-3">
-        <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-paper-plane mr-1.5"></i>Отчет по заданию / Вопрос преподавателю:</h4>
-        <textarea id="playerHomeworkInput" rows="2" placeholder="Напишите ответ или ваши выводы по уроку..." class="w-full p-3 border rounded-xl text-xs bg-white"></textarea>
+        <h4 class="text-xs font-bold text-slate-800"><i class="fa-solid fa-paper-plane mr-1.5"></i>Отчет по заданию:</h4>
+        <textarea id="playerHomeworkInput" rows="2" placeholder="Напишите ответ или отчет по уроку..." class="w-full p-3 border rounded-xl text-xs bg-white"></textarea>
         <button onclick="submitLessonInteractive()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow transition">Отправить отчет и пройти урок</button>
       </div>
     </div>
   </div>
 
-  <!-- Firebase Integration -->
+  <!-- Firebase Integration with robust error handling -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -440,9 +430,15 @@
       measurementId: "G-14HG96TRRW"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+    let app, auth, db;
+    try {
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getDatabase(app);
+      console.log("Firebase initialized successfully");
+    } catch (err) {
+      console.error("Firebase init error:", err);
+    }
 
     let authMode = 'login';
     let currentUser = null;
@@ -462,13 +458,23 @@
       document.getElementById('authBtn').innerText = mode === 'login' ? 'Войти в кабинет' : 'Создать учетную запись';
     };
 
+    // FIXED AUTH FUNCTION WITH EXPLICIT ERROR HANDLING & BUTTON STATES
     window.handleAuth = async (e) => {
       e.preventDefault();
-      const email = document.getElementById('authEmail').value;
+      const email = document.getElementById('authEmail').value.trim();
       const pass = document.getElementById('authPassword').value;
-      const name = document.getElementById('userName').value || 'Пользователь';
+      const name = document.getElementById('userName').value.trim() || 'Пользователь';
+      const authBtn = document.getElementById('authBtn');
+
+      if (!email || !pass) {
+        alert('Заполните все поля!');
+        return;
+      }
 
       try {
+        authBtn.innerText = 'Подключение...';
+        authBtn.disabled = true;
+
         if (authMode === 'register') {
           const cred = await createUserWithEmailAndPassword(auth, email, pass);
           await set(ref(db, 'users/' + cred.user.uid), { name, email, role: 'student' });
@@ -477,51 +483,76 @@
           await signInWithEmailAndPassword(auth, email, pass);
         }
       } catch (err) {
-        alert('Ошибка авторизации: ' + err.message);
+        console.error("Auth error:", err.code, err.message);
+        let msg = 'Ошибка входа: ' + err.message;
+        if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+          msg = 'Неверный email или пароль.';
+        } else if (err.code === 'auth/email-already-in-use') {
+          msg = 'Этот email уже зарегистрирован.';
+        } else if (err.code === 'auth/weak-password') {
+          msg = 'Пароль слишком слабый (минимум 6 символов).';
+        }
+        alert(msg);
+        authBtn.innerText = authMode === 'login' ? 'Войти в кабинет' : 'Создать учетную запись';
+        authBtn.disabled = false;
       }
     };
 
     window.logout = () => signOut(auth);
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUser = user;
-        document.getElementById('authScreen').classList.add('hidden');
-        document.getElementById('appScreen').classList.remove('hidden');
+    if (auth) {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentUser = user;
+          document.getElementById('authScreen').classList.add('hidden');
+          document.getElementById('appScreen').classList.remove('hidden');
 
-        onValue(ref(db, 'users'), (snapshot) => {
-          globalUsersStore = snapshot.val() || {};
-          const userData = globalUsersStore[user.uid] || { name: user.email, role: 'student' };
-          currentUserRole = userData.role;
-          currentUserName = userData.name || user.email;
-          const isAdmin = currentUserRole === 'admin' || currentUserRole === 'teacher';
-          
-          document.getElementById('profileNameDisplay').innerText = currentUserName;
-          document.getElementById('profileRoleDisplay').innerText = currentUserRole.toUpperCase();
-          document.getElementById('welcomeHeader').innerText = `С возвращением, ${currentUserName}!`;
-          document.getElementById('userAvatar').innerText = currentUserName.substring(0, 2).toUpperCase();
+          onValue(ref(db, 'users'), (snapshot) => {
+            globalUsersStore = snapshot.val() || {};
+            let userData = globalUsersStore[user.uid];
+            
+            // If user record doesn't exist in DB yet, create default
+            if (!userData) {
+              userData = { name: user.email.split('@')[0], email: user.email, role: 'student' };
+              set(ref(db, 'users/' + user.uid), userData);
+            }
 
-          document.querySelectorAll('.admin-only').forEach(el => {
-            el.classList.toggle('hidden', !isAdmin);
+            currentUserRole = userData.role || 'student';
+            currentUserName = userData.name || user.email;
+            const isAdmin = currentUserRole === 'admin' || currentUserRole === 'teacher';
+            
+            document.getElementById('profileNameDisplay').innerText = currentUserName;
+            document.getElementById('profileRoleDisplay').innerText = currentUserRole.toUpperCase();
+            document.getElementById('welcomeHeader').innerText = `С возвращением, ${currentUserName}!`;
+            document.getElementById('userAvatar').innerText = currentUserName.substring(0, 2).toUpperCase();
+
+            document.querySelectorAll('.admin-only').forEach(el => {
+              el.classList.toggle('hidden', !isAdmin);
+            });
+            document.getElementById('adminBadge').classList.toggle('hidden', !isAdmin);
+            document.getElementById('studentHwPane').classList.toggle('hidden', isAdmin);
+            document.getElementById('teacherHwPane').classList.toggle('hidden', !isAdmin);
+
+            if (isAdmin) {
+              loadAllUsersAdmin();
+              loadTeacherSubmissions();
+              loadAttendanceJournal();
+            }
+            loadTeachersDropdown();
+            loadCourses();
           });
-          document.getElementById('adminBadge').classList.toggle('hidden', !isAdmin);
-          document.getElementById('studentHwPane').classList.toggle('hidden', isAdmin);
-          document.getElementById('teacherHwPane').classList.toggle('hidden', !isAdmin);
-
-          if (isAdmin) {
-            loadAllUsersAdmin();
-            loadTeacherSubmissions();
-            loadAttendanceJournal();
+        } else {
+          currentUser = null;
+          document.getElementById('authScreen').classList.remove('hidden');
+          document.getElementById('appScreen').classList.add('hidden');
+          const authBtn = document.getElementById('authBtn');
+          if (authBtn) {
+            authBtn.innerText = authMode === 'login' ? 'Войти в кабинет' : 'Создать учетную запись';
+            authBtn.disabled = false;
           }
-          loadTeachersDropdown();
-          loadCourses();
-        });
-      } else {
-        currentUser = null;
-        document.getElementById('authScreen').classList.add('hidden');
-        document.getElementById('appScreen').classList.remove('hidden');
-      }
-    });
+        }
+      });
+    }
 
     function loadTeachersDropdown() {
       const select = document.getElementById('courseTeacher');
@@ -530,7 +561,6 @@
       select.innerHTML = '<option value="">-- Выберите преподавателя --</option>' + teachers.map(t => `<option value="${t.name}">${t.name} (${t.email})</option>`).join('');
     }
 
-    // ADVANCED LESSON BUILDER (YouTube, Text, Audio, Image, Quiz, Fill-in-blanks)
     window.openCourseModal = (courseId = null) => {
       loadTeachersDropdown();
       const container = document.getElementById('lessonsContainer');
@@ -545,7 +575,7 @@
         document.getElementById('courseTeacher').value = c.teacher || '';
         document.getElementById('courseDesc').value = c.desc || '';
         document.getElementById('courseSchedule').value = c.schedule || '';
-        document.getElementById('modalCourseTitle').innerText = 'Редактирование курса и интерактивных уроков';
+        document.getElementById('modalCourseTitle').innerText = 'Редактирование курса';
 
         if (c.materials && c.materials.length > 0) {
           c.materials.forEach(m => addLessonBlock(m));
@@ -559,14 +589,14 @@
         document.getElementById('courseTeacher').value = '';
         document.getElementById('courseDesc').value = '';
         document.getElementById('courseSchedule').value = '';
-        document.getElementById('modalCourseTitle').innerText = 'Создание нового мультимедийного курса';
+        document.getElementById('modalCourseTitle').innerText = 'Создание нового курса';
         addLessonBlock();
       }
 
       document.getElementById('courseModal').classList.remove('hidden');
     };
 
-    window.closeCourseModal = () => document.getElementById('courseModal'].classList.add('hidden');
+    window.closeCourseModal = () => document.getElementById('courseModal').classList.add('hidden');
 
     window.addLessonBlock = (data = {}) => {
       const container = document.getElementById('lessonsContainer');
@@ -574,42 +604,42 @@
       div.className = 'bg-slate-50 p-5 rounded-2xl border space-y-4 relative shadow-sm';
       div.innerHTML = `
         <div class="flex justify-between items-center pb-2 border-b">
-          <span class="text-xs font-bold text-indigo-600 uppercase">Интерактивный урок</span>
-          <button type="button" onclick="this.parentElement.parentElement.remove()" class="text-rose-500 hover:text-rose-700 text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Удалить урок</button>
+          <span class="text-xs font-bold text-indigo-600 uppercase">Урок</span>
+          <button type="button" onclick="this.parentElement.parentElement.remove()" class="text-rose-500 hover:text-rose-700 text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Удалить</button>
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-600 mb-1">Название урока</label>
-          <input type="text" placeholder="Урок 1. Введение и тоны" value="${data.title || ''}" class="les-title w-full px-3 py-2 border rounded-xl text-xs font-bold">
+          <input type="text" placeholder="Урок 1" value="${data.title || ''}" class="les-title w-full px-3 py-2 border rounded-xl text-xs font-bold">
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-brands fa-youtube text-red-500 mr-1"></i> Ссылка на YouTube видео</label>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-brands fa-youtube text-red-500 mr-1"></i> YouTube ссылка</label>
             <input type="text" placeholder="https://youtube.com/watch?v=..." value="${data.videoUrl || ''}" class="les-video w-full px-3 py-2 border rounded-xl text-xs">
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-volume-high text-amber-500 mr-1"></i> Ссылка на аудиозапись (MP3 / URL)</label>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-volume-high text-amber-500 mr-1"></i> Аудио ссылка (MP3)</label>
             <input type="text" placeholder="https://example.com/audio.mp3" value="${data.audioUrl || ''}" class="les-audio w-full px-3 py-2 border rounded-xl text-xs">
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-image text-emerald-500 mr-1"></i> Ссылка на картинку / схему</label>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-image text-emerald-500 mr-1"></i> Картинка / Схема</label>
             <input type="text" placeholder="https://example.com/image.png" value="${data.imageUrl || ''}" class="les-image w-full px-3 py-2 border rounded-xl text-xs">
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-pen-nib text-purple-500 mr-1"></i> Вставить слово / Задание на выбор</label>
-            <input type="text" placeholder="Напр: 你好, ___ (ответ: ma)" value="${data.fillWord || ''}" class="les-fill w-full px-3 py-2 border rounded-xl text-xs">
+            <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-pen-nib text-purple-500 mr-1"></i> Вставка слова</label>
+            <input type="text" placeholder="Напр: 你好, ___" value="${data.fillWord || ''}" class="les-fill w-full px-3 py-2 border rounded-xl text-xs">
           </div>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1">Теория / Текст лекции</label>
-          <textarea rows="2" placeholder="Объяснение темы, правила, грамматика..." class="les-content w-full p-3 border rounded-xl text-xs">${data.content || ''}</textarea>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">Теория / Лекция</label>
+          <textarea rows="2" placeholder="Правила, грамматика..." class="les-content w-full p-3 border rounded-xl text-xs">${data.content || ''}</textarea>
         </div>
         <div class="p-3 bg-indigo-50/60 rounded-xl border border-indigo-100 space-y-2">
-          <label class="block text-[11px] font-bold text-indigo-900"><i class="fa-solid fa-circle-question mr-1"></i> Интерактивный опрос / Тест с вариантами</label>
-          <input type="text" placeholder="Вопрос теста (напр. Как переводится 你好?)" value="${data.quizQuestion || ''}" class="les-quiz-q w-full px-3 py-2 border rounded-xl text-xs bg-white">
-          <input type="text" placeholder="Варианты через запятую (напр. Привет, Пока, Спасибо)" value="${data.quizOptions || ''}" class="les-quiz-opt w-full px-3 py-2 border rounded-xl text-xs bg-white">
-          <input type="text" placeholder="Правильный ответ (напр. Привет)" value="${data.quizAnswer || ''}" class="les-quiz-ans w-full px-3 py-2 border rounded-xl text-xs bg-white">
+          <label class="block text-[11px] font-bold text-indigo-900"><i class="fa-solid fa-circle-question mr-1"></i> Тест / Опрос</label>
+          <input type="text" placeholder="Вопрос" value="${data.quizQuestion || ''}" class="les-quiz-q w-full px-3 py-2 border rounded-xl text-xs bg-white">
+          <input type="text" placeholder="Варианты через запятую" value="${data.quizOptions || ''}" class="les-quiz-opt w-full px-3 py-2 border rounded-xl text-xs bg-white">
+          <input type="text" placeholder="Правильный ответ" value="${data.quizAnswer || ''}" class="les-quiz-ans w-full px-3 py-2 border rounded-xl text-xs bg-white">
         </div>
       `;
       container.appendChild(div);
@@ -644,10 +674,10 @@
 
       if (id) {
         update(ref(db, `courses/${id}`), courseData);
-        alert('Курс успешно обновлен!');
+        alert('Курс обновлен!');
       } else {
         push(ref(db, 'courses'), courseData);
-        alert('Курс успешно создан в Firebase!');
+        alert('Курс создан!');
       }
       closeCourseModal();
       e.target.reset();
@@ -659,7 +689,7 @@
         globalCoursesStore = data || {};
         const grid = document.getElementById('coursesGrid');
         if (!data) {
-          grid.innerHTML = '<p class="text-xs text-slate-400">Нет созданных курсов.</p>';
+          grid.innerHTML = '<p class="text-xs text-slate-400">Нет курсов.</p>';
           document.getElementById('statCoursesCount').innerText = '0';
           return;
         }
@@ -673,13 +703,13 @@
           const enrolled = c.students && c.students[currentUser.uid];
 
           return `
-            <div onclick="openCourseViewer('${key}')" class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group cursor-pointer hover:border-indigo-500 hover:shadow-md transition">
+            <div onclick="openCourseViewer('${key}')" class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group cursor-pointer hover:border-indigo-500 transition">
               <div class="flex justify-between items-start">
                 <span class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">${c.category}</span>
                 <span class="text-xs font-semibold text-slate-400">${c.level}</span>
               </div>
               <div>
-                <h4 class="font-bold text-base text-slate-900 group-hover:text-indigo-600 transition">${c.title}</h4>
+                <h4 class="font-bold text-base text-slate-900 group-hover:text-indigo-600">${c.title}</h4>
                 <p class="text-xs text-slate-500 mt-1 line-clamp-2">${c.desc}</p>
               </div>
               <div class="text-[11px] font-semibold text-indigo-600">
@@ -687,15 +717,15 @@
               </div>
               <div class="flex items-center justify-between pt-2">
                 <span class="text-[11px] font-bold ${enrolled ? 'text-emerald-600 bg-emerald-50' : 'text-slate-500 bg-slate-100'} px-2.5 py-1 rounded-lg">
-                  ${enrolled ? '<i class="fa-solid fa-check mr-1"></i> Вы записаны' : `${mats.length} интерактивных уроков`}
+                  ${enrolled ? '<i class="fa-solid fa-check mr-1"></i> Вы записаны' : `${mats.length} уроков`}
                 </span>
-                <span class="text-xs font-bold text-indigo-600 group-hover:underline">Открыть курс →</span>
+                <span class="text-xs font-bold text-indigo-600 group-hover:underline">Открыть →</span>
               </div>
               <div class="pt-3 border-t flex justify-between items-center text-xs text-slate-600 font-semibold">
                 <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i> ${c.schedule}</span>
                 ${isAdmin ? `
                   <div class="flex items-center space-x-2">
-                    <button onclick="event.stopPropagation(); openCourseModal('${key}')" class="px-2.5 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-lg text-[10px] font-bold" title="Редактировать"><i class="fa-solid fa-pen mr-1"></i>Ред.</button>
+                    <button onclick="event.stopPropagation(); openCourseModal('${key}')" class="px-2.5 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-pen mr-1"></i>Ред.</button>
                     <button onclick="event.stopPropagation(); deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash"></i></button>
                   </div>
                 ` : ''}
@@ -733,7 +763,7 @@
         const studentKeys = Object.keys(studentsObj);
         
         if (studentKeys.length === 0) {
-          studentsList.innerHTML = '<p class="text-xs text-slate-400">На этот курс еще никто не записался.</p>';
+          studentsList.innerHTML = '<p class="text-xs text-slate-400">Нет записанных студентов.</p>';
         } else {
           studentsList.innerHTML = studentKeys.map(uid => {
             const st = studentsObj[uid];
@@ -745,11 +775,9 @@
               <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border text-xs">
                 <div>
                   <p class="font-bold text-slate-800">${studentName} (${st.email})</p>
-                  <p class="text-[10px] text-slate-500">Пройдено уроков: ${completedCount} из ${materials.length}</p>
+                  <p class="text-[10px] text-slate-500">Пройдено: ${completedCount} из ${materials.length}</p>
                 </div>
-                <div class="text-right">
-                  <span class="font-black text-indigo-600">${percent}%</span>
-                </div>
+                <div class="text-right font-black text-indigo-600">${percent}%</div>
               </div>
             `;
           }).join('');
@@ -783,7 +811,7 @@
 
       const list = document.getElementById('viewerMaterialsList');
       if (materials.length === 0) {
-        list.innerHTML = '<div class="p-4 bg-slate-50 rounded-xl text-center text-xs text-slate-400">Уроки пока не добавлены.</div>';
+        list.innerHTML = '<div class="p-4 bg-slate-50 rounded-xl text-center text-xs text-slate-400">Уроки не добавлены.</div>';
       } else {
         const studentData = (!isAdmin && c.students && c.students[currentUser.uid]) ? c.students[currentUser.uid] : null;
         const completedMap = studentData && studentData.completedLessons ? studentData.completedLessons : {};
@@ -791,18 +819,18 @@
         list.innerHTML = materials.map((m, idx) => {
           const isCompleted = completedMap[idx];
           return `
-            <div onclick="openLessonPlayer('${courseId}', ${idx})" class="flex items-center justify-between p-3.5 rounded-xl border bg-white hover:border-indigo-500 hover:shadow-sm transition cursor-pointer group">
+            <div onclick="openLessonPlayer('${courseId}', ${idx})" class="flex items-center justify-between p-3.5 rounded-xl border bg-white hover:border-indigo-500 transition cursor-pointer group">
               <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 rounded-lg ${isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-indigo-50 text-indigo-600'} font-bold flex items-center justify-center text-xs">
                   ${isCompleted ? '<i class="fa-solid fa-check"></i>' : (idx + 1)}
                 </div>
                 <div>
-                  <p class="text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition">${m.title}</p>
-                  <p class="text-[10px] text-slate-400">${isCompleted ? 'Пройдено' : 'Мультимедийный урок'}</p>
+                  <p class="text-xs font-bold text-slate-800 group-hover:text-indigo-600">${m.title}</p>
+                  <p class="text-[10px] text-slate-400">${isCompleted ? 'Пройдено' : 'Урок'}</p>
                 </div>
               </div>
-              <button class="px-3 py-1.5 ${isCompleted ? 'bg-emerald-50 text-emerald-700' : 'bg-indigo-600 text-white'} rounded-lg text-xs font-bold shadow group-hover:opacity-90">
-                ${isCompleted ? 'Повторить' : 'Начать урок'}
+              <button class="px-3 py-1.5 ${isCompleted ? 'bg-emerald-50 text-emerald-700' : 'bg-indigo-600 text-white'} rounded-lg text-xs font-bold">
+                ${isCompleted ? 'Повторить' : 'Начать'}
               </button>
             </div>
           `;
@@ -827,11 +855,10 @@
       }
 
       update(ref(db, `courses/${activeCourseId}`), { students });
-      alert(isEnrolled ? 'Вы отписались от курса.' : 'Вы успешно записались на курс!');
+      alert(isEnrolled ? 'Вы отписались.' : 'Вы успешно записались!');
       openCourseViewer(activeCourseId);
     };
 
-    // INTERACTIVE LESSON PLAYER
     window.openLessonPlayer = (courseId, idx) => {
       activeCourseId = courseId;
       activeLessonIdx = idx;
@@ -843,7 +870,6 @@
       document.getElementById('playerLessonBody').innerText = activeLessonObj.content || 'Теория отсутствует.';
       document.getElementById('playerHomeworkInput').value = '';
 
-      // 1. YouTube Video
       const videoBox = document.getElementById('playerVideoContainer');
       const iframe = document.getElementById('playerIframe');
       if (activeLessonObj.videoUrl) {
@@ -856,7 +882,6 @@
         } else { videoBox.classList.add('hidden'); iframe.src = ''; }
       } else { videoBox.classList.add('hidden'); iframe.src = ''; }
 
-      // 2. Image
       const imgBox = document.getElementById('playerImageContainer');
       const imgEl = document.getElementById('playerImg');
       if (activeLessonObj.imageUrl) {
@@ -864,7 +889,6 @@
         imgBox.classList.remove('hidden');
       } else { imgBox.classList.add('hidden'); imgEl.src = ''; }
 
-      // 3. Audio
       const audioBox = document.getElementById('playerAudioContainer');
       const audioEl = document.getElementById('playerAudio');
       if (activeLessonObj.audioUrl) {
@@ -872,14 +896,13 @@
         audioBox.classList.remove('hidden');
       } else { audioBox.classList.add('hidden'); audioEl.pause(); }
 
-      // 4. Quiz / Poll
       const quizBox = document.getElementById('playerQuizBox');
       if (activeLessonObj.quizQuestion && activeLessonObj.quizOptions) {
         document.getElementById('playerQuizQuestion').innerText = activeLessonObj.quizQuestion;
         const optsContainer = document.getElementById('playerQuizOptions');
         const opts = activeLessonObj.quizOptions.split(',').map(o => o.trim());
         optsContainer.innerHTML = opts.map(opt => `
-          <label class="flex items-center space-x-2 p-2.5 bg-white rounded-xl border text-xs cursor-pointer hover:bg-indigo-50 transition">
+          <label class="flex items-center space-x-2 p-2.5 bg-white rounded-xl border text-xs cursor-pointer hover:bg-indigo-50">
             <input type="radio" name="quizChoice" value="${opt}" class="text-indigo-600">
             <span>${opt}</span>
           </label>
@@ -887,7 +910,6 @@
         quizBox.classList.remove('hidden');
       } else { quizBox.classList.add('hidden'); }
 
-      // 5. Fill in blanks
       const fillBox = document.getElementById('playerFillBox');
       if (activeLessonObj.fillWord) {
         document.getElementById('playerFillPrompt').innerText = `Задание: ${activeLessonObj.fillWord}`;
@@ -911,12 +933,12 @@
       if (quizChecked) {
         const correctAns = activeLessonObj.quizAnswer ? activeLessonObj.quizAnswer.trim() : '';
         const isCorrect = quizChecked.value.trim().toLowerCase() === correctAns.toLowerCase();
-        resultSummary += ` | Ответ на тест: "${quizChecked.value}" (${isCorrect ? 'Верно ✅' : 'Неверно ❌'})`;
+        resultSummary += ` | Тест: "${quizChecked.value}" (${isCorrect ? 'Верно ✅' : 'Неверно ❌'})`;
       }
 
       const fillVal = document.getElementById('playerFillInput').value;
       if (fillVal) {
-        resultSummary += ` | Вставленное слово: "${fillVal}"`;
+        resultSummary += ` | Ответ: "${fillVal}"`;
       }
 
       push(ref(db, 'homeworks'), {
@@ -938,18 +960,15 @@
         update(ref(db, `courses/${activeCourseId}/students/${currentUser.uid}`), c.students[currentUser.uid]);
       }
 
-      alert('Ваш интерактивный отчет отправлен, и урок отмечен как пройденный!');
+      alert('Отчет отправлен, урок пройден!');
       closeLessonPlayer();
       openCourseViewer(activeCourseId);
     };
 
     window.deleteCourse = (key) => {
-      if (confirm('Удалить этот курс?')) {
-        remove(ref(db, `courses/${key}`));
-      }
+      if (confirm('Удалить курс?')) remove(ref(db, `courses/${key}`));
     };
 
-    // Tianzige
     let currentHanziObj = { hanzi: '你好', pinyin: 'nǐ hǎo', meaning: 'Здравствуйте' };
     window.selectHanziChar = (val) => {
       const parts = val.split('|');
@@ -985,7 +1004,7 @@
                 </span>
               </td>
               <td class="p-4 text-right space-x-1">
-                <button onclick="changeUserRole('${uid}', 'student')" class="px-2 py-1 bg-slate-100 text-slate-700 rounded text-[10px]">Student</button>
+                <button onclick="changeUserRole('${uid}', 'student')" class="px-2 py-1 bg-slate-100 rounded text-[10px]">Student</button>
                 <button onclick="changeUserRole('${uid}', 'teacher')" class="px-2 py-1 bg-indigo-50 text-indigo-700 rounded text-[10px] font-bold">Teacher</button>
                 <button onclick="changeUserRole('${uid}', 'admin')" class="px-2 py-1 bg-amber-50 text-amber-700 rounded text-[10px] font-bold">Admin</button>
               </td>
@@ -1013,7 +1032,7 @@
               <td class="p-4 font-bold text-slate-900">${u.name} (${u.email})</td>
               <td class="p-4 text-slate-500">Китайский HSK 1</td>
               <td class="p-4"><span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full text-[10px]">Присутствовал</span></td>
-              <td class="p-4 text-right"><button class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-bold">Изменить</button></td>
+              <td class="p-4 text-right"><button class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold">Изменить</button></td>
             </tr>
           `;
         }).join('');
@@ -1041,13 +1060,13 @@
       push(ref(db, 'homeworks'), {
         uid: currentUser.uid,
         email: currentUser.email,
-        comment: `Пропись иероглифа: ${currentHanziObj.hanzi} (${currentHanziObj.pinyin})`,
+        comment: `Пропись: ${currentHanziObj.hanzi}`,
         img,
         date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         status: 'На проверке',
         grade: null
       });
-      alert('Пропись отправлена учителю!');
+      alert('Пропись отправлена!');
     };
 
     function loadTeacherSubmissions() {
@@ -1055,7 +1074,7 @@
         const data = snapshot.val();
         const container = document.getElementById('teacherSubmissionsList');
         if (!data) {
-          container.innerHTML = '<p class="text-xs text-slate-400">Нет работ на проверку.</p>';
+          container.innerHTML = '<p class="text-xs text-slate-400">Нет работ.</p>';
           document.getElementById('statHwPending').innerText = '0';
           return;
         }
@@ -1082,18 +1101,19 @@
       update(ref(db, `homeworks/${id}`), { status: 'Проверено', grade });
     };
 
-    // Canvas drawing
     const canvas = document.getElementById('tianzigeCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas ? canvas.getContext('2d') : null;
     let isDrawing = false;
-    const getPos = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      return { x: (e.touches ? e.touches[0].clientX : e.clientX) - rect.left, y: (e.touches ? e.touches[0].clientY : e.clientY) - rect.top };
-    };
-    canvas.addEventListener('mousedown', (e) => { isDrawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
-    canvas.addEventListener('mousemove', (e) => { if (!isDrawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.strokeStyle = '#1e293b'; ctx.stroke(); });
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    window.clearCanvas = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (canvas && ctx) {
+      const getPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        return { x: (e.touches ? e.touches[0].clientX : e.clientX) - rect.left, y: (e.touches ? e.touches[0].clientY : e.clientY) - rect.top };
+      };
+      canvas.addEventListener('mousedown', (e) => { isDrawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+      canvas.addEventListener('mousemove', (e) => { if (!isDrawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.strokeStyle = '#1e293b'; ctx.stroke(); });
+      canvas.addEventListener('mouseup', () => isDrawing = false);
+      window.clearCanvas = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
     window.switchTab = (tab) => {
       ['dashboard', 'courses', 'attendance', 'homework', 'users', 'tianzige'].forEach(t => {
