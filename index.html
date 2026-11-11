@@ -77,7 +77,7 @@
             <i class="fa-solid fa-users-gear w-4 text-amber-400"></i><span class="text-amber-400 font-bold">Управление Учетками</span>
           </button>
           <button onclick="switchTab('tianzige')" id="nav-tianzige" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-            <i class="fa-solid fa-pen-nib w-4"></i><span>Прописи Tianzige</span>
+            <i class="fa-solid fa-pen-nib w-4"></i><span>Прописи Tianzige & ДЗ</span>
           </button>
         </nav>
       </div>
@@ -141,7 +141,7 @@
         <div class="flex justify-between items-center">
           <div>
             <h3 class="text-lg font-bold">Курсы и Учебные Классы</h3>
-            <p class="text-xs text-slate-500">Создание языковых программ и распределение студентов по группам</p>
+            <p class="text-xs text-slate-500">Кликните на курс для просмотра или изменения деталей программы</p>
           </div>
           <button onclick="openCourseModal()" class="admin-only hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
             <i class="fa-solid fa-plus"></i><span>Создать Курс</span>
@@ -149,7 +149,7 @@
         </div>
 
         <div id="coursesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Dynamically populated from Firebase Courses -->
+          <!-- Dynamically populated -->
         </div>
       </div>
 
@@ -188,7 +188,7 @@
             <label class="block text-xs font-bold text-slate-600 mb-1">Комментарий к заданию</label>
             <textarea id="hwComment" rows="3" placeholder="Выполнила пропись и упражнение..." class="w-full p-3 border rounded-xl text-xs"></textarea>
           </div>
-          <button onclick="submitHomework()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-indigo-700 shadow">Отправить в базу Firebase</button>
+          <button onclick="submitHomeworkText()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-indigo-700 shadow">Отправить текстовое ДЗ в базу Firebase</button>
         </div>
 
         <div id="teacherHwPane" class="hidden bg-white p-6 rounded-2xl border shadow-sm space-y-4">
@@ -220,13 +220,13 @@
               </tr>
             </thead>
             <tbody id="usersTableBody" class="divide-y divide-slate-100 font-medium">
-              <!-- Dynamically populated from Firebase Users -->
+              <!-- Dynamically populated -->
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- 6. TIANZIGE TAB -->
+      <!-- 6. TIANZIGE TAB & HOMEWORK SUBMISSION -->
       <div id="tabContentTianzige" class="hidden space-y-6">
         <div class="bg-white p-6 rounded-2xl border shadow-sm flex flex-col lg:flex-row gap-6 items-center justify-center">
           <div class="bg-slate-50 p-6 rounded-2xl border w-full lg:w-64 text-center space-y-3">
@@ -239,7 +239,10 @@
             <div class="relative border-4 border-red-300 rounded-2xl overflow-hidden bg-red-50/20">
               <canvas id="tianzigeCanvas" width="280" height="280" class="cursor-crosshair"></canvas>
             </div>
-            <button onclick="clearCanvas()" class="px-4 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50">Очистить холст</button>
+            <div class="flex space-x-2 w-full">
+              <button onclick="clearCanvas()" class="flex-1 px-4 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50">Очистить холст</button>
+              <button onclick="submitTianzigeHomework()" class="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 shadow">Отправить пропись учителю</button>
+            </div>
           </div>
         </div>
       </div>
@@ -247,15 +250,16 @@
     </main>
   </div>
 
-  <!-- MODAL: CREATE COURSE -->
+  <!-- MODAL: CREATE / EDIT COURSE -->
   <div id="courseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
     <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-lg shadow-2xl space-y-6 border border-slate-200">
       <div class="flex justify-between items-center">
-        <h3 class="text-lg font-black text-slate-900">Создание нового курса</h3>
+        <h3 id="modalCourseTitle" class="text-lg font-black text-slate-900">Управление курсом</h3>
         <button onclick="closeCourseModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
       </div>
 
-      <form onsubmit="handleCreateCourse(event)" class="space-y-4">
+      <form onsubmit="handleSaveCourse(event)" class="space-y-4">
+        <input type="hidden" id="editCourseId">
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Название курса</label>
           <input type="text" id="courseTitle" required placeholder="например, Китайский HSK 2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
@@ -272,8 +276,8 @@
           <input type="text" id="courseLevel" required placeholder="например, HSK 2 или IELTS B2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Описание</label>
-          <textarea id="courseDesc" rows="3" required placeholder="Краткое описание программы обучения..." class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Описание и программа</label>
+          <textarea id="courseDesc" rows="3" required placeholder="Описание программы обучения и модулей..." class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Расписание занятий</label>
@@ -282,7 +286,7 @@
 
         <div class="flex space-x-3 pt-2">
           <button type="button" onclick="closeCourseModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">Отмена</button>
-          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">Создать курс</button>
+          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">Сохранить курс</button>
         </div>
       </form>
     </div>
@@ -311,6 +315,7 @@
 
     let authMode = 'login';
     let currentUser = null;
+    let currentUserRole = 'student';
 
     window.switchAuthMode = (mode) => {
       authMode = mode;
@@ -349,6 +354,7 @@
 
         onValue(ref(db, 'users/' + user.uid), (snapshot) => {
           const userData = snapshot.val() || { name: user.email, role: 'student' };
+          currentUserRole = userData.role;
           const isAdmin = userData.role === 'admin' || userData.role === 'teacher';
           
           document.getElementById('profileNameDisplay').innerText = userData.name;
@@ -377,20 +383,38 @@
       }
     });
 
-    // COURSES LOGIC
-    window.openCourseModal = () => document.getElementById('courseModal').classList.remove('hidden');
+    // COURSES LOGIC & MODAL
+    window.openCourseModal = (courseId = null, title = '', category = 'КИТАЙСКИЙ ЯЗЫК', level = '', desc = '', schedule = '') => {
+      document.getElementById('editCourseId').value = courseId || '';
+      document.getElementById('courseTitle').value = title;
+      document.getElementById('courseCategory').value = category;
+      document.getElementById('courseLevel').value = level;
+      document.getElementById('courseDesc').value = desc;
+      document.getElementById('courseSchedule').value = schedule;
+      document.getElementById('modalCourseTitle').innerText = courseId ? 'Редактирование курса' : 'Создание нового курса';
+      document.getElementById('courseModal').classList.remove('hidden');
+    };
+
     window.closeCourseModal = () => document.getElementById('courseModal').classList.add('hidden');
 
-    window.handleCreateCourse = (e) => {
+    window.handleSaveCourse = (e) => {
       e.preventDefault();
+      const id = document.getElementById('editCourseId').value;
       const title = document.getElementById('courseTitle').value;
       const category = document.getElementById('courseCategory').value;
       const level = document.getElementById('courseLevel').value;
       const desc = document.getElementById('courseDesc').value;
       const schedule = document.getElementById('courseSchedule').value;
 
-      push(ref(db, 'courses'), { title, category, level, desc, schedule });
-      alert('Курс успешно создан и сохранен в Firebase!');
+      const courseData = { title, category, level, desc, schedule };
+
+      if (id) {
+        update(ref(db, `courses/${id}`), courseData);
+        alert('Курс успешно обновлен!');
+      } else {
+        push(ref(db, 'courses'), courseData);
+        alert('Курс успешно создан в Firebase!');
+      }
       closeCourseModal();
       e.target.reset();
     };
@@ -406,10 +430,13 @@
         }
         const keys = Object.keys(data);
         document.getElementById('statCoursesCount').innerText = keys.length;
+        const isAdmin = currentUserRole === 'admin' || currentUserRole === 'teacher';
+
         grid.innerHTML = keys.map(key => {
           const c = data[key];
+          const clickAttr = isAdmin ? `onclick="openCourseModal('${key}', '${c.title.replace(/'/g, "\'")}', '${c.category}', '${c.level.replace(/'/g, "\'")}', '${c.desc.replace(/'/g, "\'")}', '${c.schedule}')"` : '';
           return `
-            <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group">
+            <div ${clickAttr} class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group ${isAdmin ? 'cursor-pointer hover:border-indigo-500 hover:shadow-md transition' : ''}">
               <div class="flex justify-between items-start">
                 <span class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">${c.category}</span>
                 <span class="text-xs font-semibold text-slate-400">${c.level}</span>
@@ -420,7 +447,7 @@
               </div>
               <div class="pt-3 border-t flex justify-between items-center text-xs text-slate-600 font-semibold">
                 <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i> ${c.schedule}</span>
-                <button onclick="deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600 admin-only hidden"><i class="fa-solid fa-trash"></i></button>
+                ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>` : ''}
               </div>
             </div>
           `;
@@ -495,22 +522,34 @@
       });
     }
 
-    window.submitHomework = () => {
+    window.submitHomeworkText = () => {
       const comment = document.getElementById('hwComment').value || 'Без комментария';
-      const canvas = document.getElementById('tianzigeCanvas');
-      const img = canvas ? canvas.toDataURL() : '';
-
       push(ref(db, 'homeworks'), {
         uid: currentUser.uid,
         email: currentUser.email,
         comment,
+        img: null,
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        status: 'На проверке',
+        grade: null
+      });
+      alert('Домашнее задание успешно отправлено!');
+      document.getElementById('hwComment').value = '';
+    };
+
+    window.submitTianzigeHomework = () => {
+      const canvas = document.getElementById('tianzigeCanvas');
+      const img = canvas ? canvas.toDataURL() : '';
+      push(ref(db, 'homeworks'), {
+        uid: currentUser.uid,
+        email: currentUser.email,
+        comment: 'Пропись иероглифа (Tianzige)',
         img,
         date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         status: 'На проверке',
         grade: null
       });
-      alert('ДЗ успешно отправлено!');
-      document.getElementById('hwComment').value = '';
+      alert('Пропись успешно отправлена учителю!');
     };
 
     function loadTeacherSubmissions() {
@@ -532,7 +571,7 @@
                 <span>${item.email}</span>
                 <span class="text-amber-600">${item.status}</span>
               </div>
-              ${item.img ? `<img src="${item.img}" class="w-24 h-24 border rounded-xl bg-white p-1">` : ''}
+              ${item.img ? `<img src="${item.img}" class="w-32 h-32 border rounded-xl bg-white p-1">` : ''}
               <p class="text-xs text-slate-600">${item.comment}</p>
               <button onclick="gradeHw('${key}', 5)" class="px-3 py-1 bg-white border rounded-lg text-xs font-bold hover:border-indigo-500">Поставить 5 ★</button>
             </div>
