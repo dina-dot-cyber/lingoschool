@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LingoSchool LMS — Full Admin Edition</title>
+  <title>LingoSchool LMS — Full Pro Edition</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -65,7 +65,7 @@
             <i class="fa-solid fa-chart-pie w-4"></i><span>Дашборд</span>
           </button>
           <button onclick="switchTab('courses')" id="nav-courses" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
-            <i class="fa-solid fa-book-bookmark w-4"></i><span>Курсы и Классы</span>
+            <i class="fa-solid fa-book-bookmark w-4"></i><span>Курсы и Уроки</span>
           </button>
           <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
             <i class="fa-solid fa-calendar-check w-4"></i><span>Журнал посещаемости</span>
@@ -113,7 +113,7 @@
         <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 rounded-3xl p-6 text-white shadow-lg space-y-2">
           <p class="text-xs font-medium text-indigo-200">Панель управления LingoSchool LMS</p>
           <h3 id="welcomeHeader" class="text-2xl font-black">С возвращением!</h3>
-          <p class="text-xs text-indigo-100 max-w-xl">Управляйте курсами, отслеживайте посещаемость студентов и проверяйте выполненные задания в единой системе.</p>
+          <p class="text-xs text-indigo-100 max-w-xl">Управляйте курсами, добавляйте видео и материалы уроков, отслеживайте посещаемость и проверяйте домашние работы.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -123,7 +123,7 @@
           </div>
           <div class="bg-white p-5 rounded-2xl border shadow-sm">
             <p class="text-[10px] font-extrabold uppercase text-slate-400">Активных курсов</p>
-            <div id="statCoursesCount" class="text-2xl font-black text-slate-900 mt-1">2</div>
+            <div id="statCoursesCount" class="text-2xl font-black text-slate-900 mt-1">0</div>
           </div>
           <div class="bg-white p-5 rounded-2xl border shadow-sm">
             <p class="text-[10px] font-extrabold uppercase text-slate-400">Работы на проверке</p>
@@ -136,12 +136,12 @@
         </div>
       </div>
 
-      <!-- 2. COURSES & CLASSES MANAGEMENT TAB -->
+      <!-- 2. COURSES & LESSON MATERIALS TAB -->
       <div id="tabContentCourses" class="hidden space-y-6">
         <div class="flex justify-between items-center">
           <div>
-            <h3 class="text-lg font-bold">Курсы и Учебные Классы</h3>
-            <p class="text-xs text-slate-500">Кликните на курс для просмотра или изменения деталей программы</p>
+            <h3 class="text-lg font-bold">Курсы и Учебные Материалы</h3>
+            <p class="text-xs text-slate-500">Нажмите на курс, чтобы открыть программу, видеоуроки, упражнения и файлы</p>
           </div>
           <button onclick="openCourseModal()" class="admin-only hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
             <i class="fa-solid fa-plus"></i><span>Создать Курс</span>
@@ -180,15 +180,15 @@
         </div>
       </div>
 
-      <!-- 4. HOMEWORK CREATOR & CHECK TAB -->
+      <!-- 4. HOMEWORK CHECK & SUBMISSION TAB -->
       <div id="tabContentHomework" class="hidden space-y-6">
         <div id="studentHwPane" class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 max-w-xl">
           <h3 class="text-lg font-bold">Сдача домашнего задания</h3>
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">Комментарий к заданию</label>
-            <textarea id="hwComment" rows="3" placeholder="Выполнила пропись и упражнение..." class="w-full p-3 border rounded-xl text-xs"></textarea>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Комментарий к заданию или ссылка на материал</label>
+            <textarea id="hwComment" rows="3" placeholder="Выполнила упражнение №3 из урока..." class="w-full p-3 border rounded-xl text-xs"></textarea>
           </div>
-          <button onclick="submitHomeworkText()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-indigo-700 shadow">Отправить текстовое ДЗ в базу Firebase</button>
+          <button onclick="submitHomeworkText()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-indigo-700 shadow">Отправить домашнее задание в базу Firebase</button>
         </div>
 
         <div id="teacherHwPane" class="hidden bg-white p-6 rounded-2xl border shadow-sm space-y-4">
@@ -229,12 +229,35 @@
       <!-- 6. TIANZIGE TAB & HOMEWORK SUBMISSION -->
       <div id="tabContentTianzige" class="hidden space-y-6">
         <div class="bg-white p-6 rounded-2xl border shadow-sm flex flex-col lg:flex-row gap-6 items-center justify-center">
-          <div class="bg-slate-50 p-6 rounded-2xl border w-full lg:w-64 text-center space-y-3">
-            <div class="text-6xl font-serif">你好</div>
-            <div class="text-lg font-bold text-indigo-600">nǐ hǎo</div>
-            <p class="text-xs text-slate-600">Здравствуйте</p>
-            <button onclick="speakHanzi('你好')" class="w-full bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold hover:bg-indigo-700">Озвучить</button>
+          <!-- Character selector / Add new character -->
+          <div class="bg-slate-50 p-6 rounded-2xl border w-full lg:w-72 space-y-4">
+            <div class="text-center space-y-2">
+              <div id="hanziDisplay" class="text-6xl font-serif">你好</div>
+              <div id="pinyinDisplay" class="text-lg font-bold text-indigo-600">nǐ hǎo</div>
+              <p id="translationDisplay" class="text-xs text-slate-600">Здравствуйте</p>
+              <button onclick="speakCurrentHanzi()" class="w-full bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold hover:bg-indigo-700">Озвучить</button>
+            </div>
+
+            <!-- Character Switcher & Creator (Admin only or all) -->
+            <div class="space-y-3 pt-4 border-t">
+              <label class="block text-xs font-bold text-slate-700">Выберите иероглиф для прописи:</label>
+              <select id="hanziSelector" onchange="selectHanziChar(this.value)" class="w-full px-3 py-2 border rounded-xl text-xs font-medium bg-white">
+                <option value="你好|nǐ hǎo|Здравствуйте">你好 (nǐ hǎo)</option>
+                <option value="学习|xué xí|Учиться">学习 (xué xí)</option>
+                <option value="老师|lǎo shī|Учитель">老师 (lǎo shī)</option>
+                <option value="中国|zhōng guó|Китай">中国 (zhōng guó)</option>
+              </select>
+
+              <div class="admin-only hidden space-y-2 pt-2 border-t">
+                <p class="text-[11px] font-bold text-indigo-600">Добавить свой иероглиф:</p>
+                <input type="text" id="newHanzi" placeholder="Иероглиф (напр. 爱)" class="w-full px-3 py-1.5 border rounded-lg text-xs">
+                <input type="text" id="newPinyin" placeholder="Пиньинь (напр. ài)" class="w-full px-3 py-1.5 border rounded-lg text-xs">
+                <input type="text" id="newMeaning" placeholder="Перевод (напр. Любовь)" class="w-full px-3 py-1.5 border rounded-lg text-xs">
+                <button onclick="addNewHanziOption()" class="w-full bg-slate-900 text-white py-1.5 rounded-lg text-xs font-bold hover:bg-slate-800">Добавить в список</button>
+              </div>
+            </div>
           </div>
+
           <div class="flex flex-col items-center space-y-3">
             <div class="relative border-4 border-red-300 rounded-2xl overflow-hidden bg-red-50/20">
               <canvas id="tianzigeCanvas" width="280" height="280" class="cursor-crosshair"></canvas>
@@ -250,45 +273,86 @@
     </main>
   </div>
 
-  <!-- MODAL: CREATE / EDIT COURSE -->
-  <div id="courseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
-    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-lg shadow-2xl space-y-6 border border-slate-200">
+  <!-- MODAL: CREATE / EDIT COURSE & MATERIALS -->
+  <div id="courseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 overflow-y-auto">
+    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-2xl shadow-2xl space-y-6 border border-slate-200 my-8">
       <div class="flex justify-between items-center">
-        <h3 id="modalCourseTitle" class="text-lg font-black text-slate-900">Управление курсом</h3>
+        <h3 id="modalCourseTitle" class="text-lg font-black text-slate-900">Управление курсом и материалами</h3>
         <button onclick="closeCourseModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
       </div>
 
-      <form onsubmit="handleSaveCourse(event)" class="space-y-4">
+      <form onsubmit="handleSaveCourse(event)" class="space-y-4 max-h-[75vh] overflow-y-auto pr-2">
         <input type="hidden" id="editCourseId">
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Название курса</label>
           <input type="text" id="courseTitle" required placeholder="например, Китайский HSK 2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Категория / Язык</label>
-          <select id="courseCategory" class="w-full px-4 py-3 border rounded-xl text-xs font-medium bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-            <option value="КИТАЙСКИЙ ЯЗЫК">Китайский язык</option>
-            <option value="АНГЛИЙСКИЙ ЯЗЫК">Английский язык</option>
-          </select>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Категория / Язык</label>
+            <select id="courseCategory" class="w-full px-4 py-3 border rounded-xl text-xs font-medium bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <option value="КИТАЙСКИЙ ЯЗЫК">Китайский язык</option>
+              <option value="АНГЛИЙСКИЙ ЯЗЫК">Английский язык</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Уровень</label>
+            <input type="text" id="courseLevel" required placeholder="HSK 2 или IELTS B2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Уровень</label>
-          <input type="text" id="courseLevel" required placeholder="например, HSK 2 или IELTS B2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-600 mb-1">Описание и программа курса</label>
+          <textarea id="courseDesc" rows="2" required placeholder="Общее описание программы..." class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Описание и программа</label>
-          <textarea id="courseDesc" rows="3" required placeholder="Описание программы обучения и модулей..." class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Расписание занятий</label>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Расписание</label>
           <input type="text" id="courseSchedule" required placeholder="Вт, Чт 18:00" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
 
-        <div class="flex space-x-3 pt-2">
+        <!-- MATERIALS & LESSONS BUILDER -->
+        <div class="pt-4 border-t space-y-3">
+          <div class="flex justify-between items-center">
+            <h4 class="text-sm font-bold text-indigo-600"><i class="fa-solid fa-folder-open mr-1.5"></i> Учебные материалы, видео и упражнения</h4>
+            <button type="button" onclick="addMaterialField()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold">+ Добавить материал</button>
+          </div>
+          <p class="text-[11px] text-slate-500">Добавьте ссылки на видеоуроки (YouTube), файлы или интерактивные упражнения для этого курса.</p>
+          
+          <div id="materialsContainer" class="space-y-3">
+            <!-- Dynamic Material Rows -->
+          </div>
+        </div>
+
+        <div class="flex space-x-3 pt-4 border-t">
           <button type="button" onclick="closeCourseModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">Отмена</button>
-          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">Сохранить курс</button>
+          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">Сохранить курс и материалы</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- COURSE VIEWER MODAL (For Students & Teachers) -->
+  <div id="courseViewerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-xl shadow-2xl space-y-6 border border-slate-200 max-h-[80vh] overflow-y-auto">
+      <div class="flex justify-between items-start">
+        <div>
+          <span id="viewerCategory" class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">КАТЕГОРИЯ</span>
+          <h3 id="viewerTitle" class="text-xl font-black text-slate-900 mt-1">Название курса</h3>
+          <p id="viewerLevel" class="text-xs font-semibold text-slate-400">Уровень</p>
+        </div>
+        <button onclick="closeCourseViewer()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
+      </div>
+
+      <div class="space-y-3">
+        <p id="viewerDesc" class="text-xs text-slate-600 leading-relaxed"></p>
+        <div class="text-xs text-slate-500 font-semibold flex items-center"><i class="fa-solid fa-clock text-indigo-500 mr-2"></i><span id="viewerSchedule"></span></div>
+      </div>
+
+      <div class="pt-4 border-t space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Материалы и уроки курса:</h4>
+        <div id="viewerMaterialsList" class="space-y-2">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
     </div>
   </div>
 
@@ -383,19 +447,45 @@
       }
     });
 
-    // COURSES LOGIC & MODAL
-    window.openCourseModal = (courseId = null, title = '', category = 'КИТАЙСКИЙ ЯЗЫК', level = '', desc = '', schedule = '') => {
+    // COURSES & MATERIALS LOGIC
+    window.openCourseModal = (courseId = null, title = '', category = 'КИТАЙСКИЙ ЯЗЫК', level = '', desc = '', schedule = '', materials = []) => {
       document.getElementById('editCourseId').value = courseId || '';
       document.getElementById('courseTitle').value = title;
       document.getElementById('courseCategory').value = category;
       document.getElementById('courseLevel').value = level;
       document.getElementById('courseDesc').value = desc;
       document.getElementById('courseSchedule').value = schedule;
-      document.getElementById('modalCourseTitle').innerText = courseId ? 'Редактирование курса' : 'Создание нового курса';
+      document.getElementById('modalCourseTitle').innerText = courseId ? 'Редактирование курса и материалов' : 'Создание нового курса';
+      
+      const container = document.getElementById('materialsContainer');
+      container.innerHTML = '';
+      if (materials && materials.length > 0) {
+        materials.forEach(m => addMaterialField(m.title, m.type, m.url));
+      } else {
+        addMaterialField();
+      }
+
       document.getElementById('courseModal').classList.remove('hidden');
     };
 
     window.closeCourseModal = () => document.getElementById('courseModal').classList.add('hidden');
+
+    window.addMaterialField = (title = '', type = 'video', url = '') => {
+      const container = document.getElementById('materialsContainer');
+      const div = document.createElement('div');
+      div.className = 'flex gap-2 items-center bg-slate-50 p-3 rounded-xl border';
+      div.innerHTML = `
+        <select class="mat-type px-2 py-2 border rounded-lg text-xs bg-white font-medium">
+          <option value="video" ${type==='video'?'selected':''}>Видео (YouTube)</option>
+          <option value="file" ${type==='file'?'selected':''}>Документ / Файл</option>
+          <option value="exercise" ${type==='exercise'?'selected':''}>Упражнение / Тест</option>
+        </select>
+        <input type="text" placeholder="Название (напр. Урок 1)" value="${title}" class="mat-title flex-1 px-3 py-2 border rounded-lg text-xs">
+        <input type="text" placeholder="Ссылка (URL)" value="${url}" class="mat-url flex-1 px-3 py-2 border rounded-lg text-xs">
+        <button type="button" onclick="this.parentElement.remove()" class="text-rose-400 hover:text-rose-600 px-2"><i class="fa-solid fa-trash"></i></button>
+      `;
+      container.appendChild(div);
+    };
 
     window.handleSaveCourse = (e) => {
       e.preventDefault();
@@ -406,11 +496,20 @@
       const desc = document.getElementById('courseDesc').value;
       const schedule = document.getElementById('courseSchedule').value;
 
-      const courseData = { title, category, level, desc, schedule };
+      // Collect materials
+      const materials = [];
+      document.querySelectorAll('#materialsContainer > div').forEach(row => {
+        const t = row.querySelector('.mat-type').value;
+        const ttl = row.querySelector('.mat-title').value;
+        const u = row.querySelector('.mat-url').value;
+        if (ttl) materials.push({ type: t, title: ttl, url: u });
+      });
+
+      const courseData = { title, category, level, desc, schedule, materials };
 
       if (id) {
         update(ref(db, `courses/${id}`), courseData);
-        alert('Курс успешно обновлен!');
+        alert('Курс и учебные материалы успешно обновлены!');
       } else {
         push(ref(db, 'courses'), courseData);
         alert('Курс успешно создан в Firebase!');
@@ -434,20 +533,28 @@
 
         grid.innerHTML = keys.map(key => {
           const c = data[key];
-          const clickAttr = isAdmin ? `onclick="openCourseModal('${key}', '${c.title.replace(/'/g, "\'")}', '${c.category}', '${c.level.replace(/'/g, "\'")}', '${c.desc.replace(/'/g, "\'")}', '${c.schedule}')"` : '';
+          const mats = c.materials || [];
+          // If admin, click opens editor; if student, click opens viewer
+          const clickAction = isAdmin 
+            ? `openCourseModal('${key}', '${c.title.replace(/'/g, "\'")}', '${c.category}', '${c.level.replace(/'/g, "\'")}', '${c.desc.replace(/'/g, "\'")}', '${c.schedule}', ${JSON.stringify(mats).replace(/'/g, "\'")})`
+            : `openCourseViewer('${c.title.replace(/'/g, "\'")}', '${c.category}', '${c.level.replace(/'/g, "\'")}', '${c.desc.replace(/'/g, "\'")}', '${c.schedule}', ${JSON.stringify(mats).replace(/'/g, "\'")})`;
+
           return `
-            <div ${clickAttr} class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group ${isAdmin ? 'cursor-pointer hover:border-indigo-500 hover:shadow-md transition' : ''}">
+            <div onclick="${clickAction}" class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 relative group cursor-pointer hover:border-indigo-500 hover:shadow-md transition">
               <div class="flex justify-between items-start">
                 <span class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">${c.category}</span>
                 <span class="text-xs font-semibold text-slate-400">${c.level}</span>
               </div>
               <div>
                 <h4 class="font-bold text-base text-slate-900">${c.title}</h4>
-                <p class="text-xs text-slate-500 mt-1">${c.desc}</p>
+                <p class="text-xs text-slate-500 mt-1 line-clamp-2">${c.desc}</p>
+              </div>
+              <div class="flex items-center space-x-2 text-[11px] font-semibold text-indigo-600">
+                <i class="fa-solid fa-folder-open"></i><span>${mats.length} материалов (видео/файлы)</span>
               </div>
               <div class="pt-3 border-t flex justify-between items-center text-xs text-slate-600 font-semibold">
                 <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i> ${c.schedule}</span>
-                ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>` : ''}
+                ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>` : '<span class="text-indigo-600 font-bold">Открыть →</span>'}
               </div>
             </div>
           `;
@@ -455,9 +562,87 @@
       });
     }
 
+    window.openCourseViewer = (title, category, level, desc, schedule, materials) => {
+      document.getElementById('viewerCategory').innerText = category;
+      document.getElementById('viewerTitle').innerText = title;
+      document.getElementById('viewerLevel').innerText = level;
+      document.getElementById('viewerDesc').innerText = desc;
+      document.getElementById('viewerSchedule').innerText = schedule;
+
+      const list = document.getElementById('viewerMaterialsList');
+      if (!materials || materials.length === 0) {
+        list.innerHTML = '<p class="text-xs text-slate-400">К этому курсу материалы пока не добавлены.</p>';
+      } else {
+        list.innerHTML = materials.map(m => {
+          let icon = 'fa-file-lines';
+          let badgeColor = 'bg-slate-100 text-slate-700';
+          if (m.type === 'video') { icon = 'fa-play-circle text-rose-500'; badgeColor = 'bg-rose-50 text-rose-700'; }
+          if (m.type === 'exercise') { icon = 'fa-pen-to-square text-amber-500'; badgeColor = 'bg-amber-50 text-amber-700'; }
+          if (m.type === 'file') { icon = 'fa-file-arrow-down text-indigo-500'; badgeColor = 'bg-indigo-50 text-indigo-700'; }
+
+          return `
+            <a href="${m.url || '#'}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border bg-slate-50 hover:bg-slate-100 transition">
+              <div class="flex items-center space-x-3">
+                <i class="fa-solid ${icon} text-base"></i>
+                <div>
+                  <p class="text-xs font-bold text-slate-800">${m.title}</p>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded ${badgeColor}">${m.type.toUpperCase()}</span>
+                </div>
+              </div>
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i>
+            </a>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('courseViewerModal').classList.remove('hidden');
+    };
+
+    window.closeCourseViewer = () => document.getElementById('courseViewerModal').classList.add('hidden');
+
     window.deleteCourse = (key) => {
-      if (confirm('Удалить этот курс?')) {
+      if (confirm('Удалить этот курс со всеми материалами?')) {
         remove(ref(db, `courses/${key}`));
+      }
+    };
+
+    // TIANZIGE & DYNAMIC CHARACTERS LOGIC
+    let currentHanziObj = { hanzi: '你好', pinyin: 'nǐ hǎo', meaning: 'Здравствуйте' };
+
+    window.selectHanziChar = (val) => {
+      const parts = val.split('|');
+      currentHanziObj = { hanzi: parts[0], pinyin: parts[1], meaning: parts[2] };
+      document.getElementById('hanziDisplay').innerText = currentHanziObj.hanzi;
+      document.getElementById('pinyinDisplay').innerText = currentHanziObj.pinyin;
+      document.getElementById('translationDisplay').innerText = currentHanziObj.meaning;
+    };
+
+    window.addNewHanziOption = () => {
+      const h = document.getElementById('newHanzi').value.trim();
+      const p = document.getElementById('newPinyin').value.trim();
+      const m = document.getElementById('newMeaning').value.trim();
+      if (!h || !p) { alert('Введите иероглиф и пиньинь!'); return; }
+
+      const selector = document.getElementById('hanziSelector');
+      const opt = document.createElement('option');
+      const valStr = `${h}|${p}|${m || 'Слово'}`;
+      opt.value = valStr;
+      opt.text = `${h} (${p})`;
+      selector.appendChild(opt);
+      selector.value = valStr;
+      selectHanziChar(valStr);
+
+      document.getElementById('newHanzi').value = '';
+      document.getElementById('newPinyin').value = '';
+      document.getElementById('newMeaning').value = '';
+      alert('Иероглиф успешно добавлен в тетрадь прописей!');
+    };
+
+    window.speakCurrentHanzi = () => {
+      if ('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance(currentHanziObj.hanzi);
+        u.lang = 'zh-CN';
+        window.speechSynthesis.speak(u);
       }
     };
 
@@ -543,7 +728,7 @@
       push(ref(db, 'homeworks'), {
         uid: currentUser.uid,
         email: currentUser.email,
-        comment: 'Пропись иероглифа (Tianzige)',
+        comment: `Пропись иероглифа: ${currentHanziObj.hanzi} (${currentHanziObj.pinyin})`,
         img,
         date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         status: 'На проверке',
@@ -597,7 +782,6 @@
     canvas.addEventListener('mouseup', () => isDrawing = false);
 
     window.clearCanvas = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
-    window.speakHanzi = (txt) => { if ('speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(txt); u.lang = 'zh-CN'; window.speechSynthesis.speak(u); } };
     window.switchTab = (tab) => {
       ['dashboard', 'courses', 'attendance', 'homework', 'users', 'tianzige'].forEach(t => {
         const el = document.getElementById('tabContent' + t.charAt(0).toUpperCase() + t.slice(1));
