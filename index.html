@@ -67,6 +67,9 @@
           <button onclick="switchTab('courses')" id="nav-courses" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
             <i class="fa-solid fa-book-bookmark w-4"></i><span>Курсы и Уроки</span>
           </button>
+          <button onclick="switchTab('englishTests')" id="nav-englishTests" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
+            <i class="fa-solid fa-spell-check w-4"></i><span>Тесты по английскому</span>
+          </button>
           <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
             <i class="fa-solid fa-calendar-check w-4"></i><span>Журнал посещаемости</span>
           </button>
@@ -101,7 +104,7 @@
       <header class="flex justify-between items-center bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
         <div>
           <h2 id="pageTitle" class="text-xl font-bold text-slate-900">Интерактивный Личный Кабинет</h2>
-          <p class="text-xs text-slate-500">LingoSchool LMS • Мультимедийные уроки и опросы</p>
+          <p class="text-xs text-slate-500">LingoSchool LMS • Мультимедийные уроки, тесты и прописи</p>
         </div>
         <div id="adminBadge" class="hidden bg-amber-100 text-amber-800 px-3 py-1 rounded-xl text-xs font-bold border border-amber-200">
           <i class="fa-solid fa-shield-halved mr-1"></i> ADMIN ACCESS
@@ -113,7 +116,7 @@
         <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 rounded-3xl p-6 text-white shadow-lg space-y-2">
           <p class="text-xs font-medium text-indigo-200">Платформа с интерактивным конструктором</p>
           <h3 id="welcomeHeader" class="text-2xl font-black">С возвращением!</h3>
-          <p class="text-xs text-indigo-100 max-w-xl">Создавайте уроки с тестами, опросами, аудиозаписями, картинками и вставкой слов. Обучайте студентов интерактивно.</p>
+          <p class="text-xs text-indigo-100 max-w-xl">Создавайте и редактируйте курсы, добавляйте тесты по английскому языку и иероглифы в прописи Tianzige.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -130,8 +133,8 @@
             <div id="statHwPending" class="text-2xl font-black text-amber-600 mt-1">0</div>
           </div>
           <div class="bg-white p-5 rounded-2xl border shadow-sm">
-            <p class="text-[10px] font-extrabold uppercase text-slate-400">Средняя посещаемость</p>
-            <div class="text-2xl font-black text-emerald-600 mt-1">96%</div>
+            <p class="text-[10px] font-extrabold uppercase text-slate-400">Тестов по англ.</p>
+            <div id="statTestsCount" class="text-2xl font-black text-indigo-600 mt-1">0</div>
           </div>
         </div>
       </div>
@@ -151,6 +154,21 @@
         <div id="coursesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </div>
 
+      <!-- 2.5 ENGLISH TESTS BUILDER & RUNNER TAB -->
+      <div id="tabContentEnglishTests" class="hidden space-y-6">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="text-lg font-bold">Конструктор и банк тестов по английскому языку</h3>
+            <p class="text-xs text-slate-500">Создавайте тесты (Grammar, Vocabulary, IELTS Placement) и проверяйте знания студентов</p>
+          </div>
+          <button onclick="openEnglishTestModal()" class="admin-only hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
+            <i class="fa-solid fa-plus"></i><span>Создать тест по англ.</span>
+          </button>
+        </div>
+
+        <div id="englishTestsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+      </div>
+
       <!-- 3. ATTENDANCE JOURNAL TAB -->
       <div id="tabContentAttendance" class="hidden space-y-6">
         <div class="flex justify-between items-center">
@@ -158,7 +176,7 @@
             <h3 class="text-lg font-bold">Электронный Журнал Посещаемости</h3>
             <p class="text-xs text-slate-500">Отметка присутствия студентов на занятиях</p>
           </div>
-          <input type="date" id="attendanceDate" value="2026-11-11" class="px-3 py-2 border rounded-xl text-xs font-semibold bg-white shadow-sm">
+          <input type="date" id="attendanceDate" value="2026-11-12" class="px-3 py-2 border rounded-xl text-xs font-semibold bg-white shadow-sm">
         </div>
 
         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
@@ -220,29 +238,47 @@
         </div>
       </div>
 
-      <!-- 6. TIANZIGE TAB -->
+      <!-- 6. TIANZIGE TAB (WITH ADD HANZI FEATURE) -->
       <div id="tabContentTianzige" class="hidden space-y-6">
-        <div class="bg-white p-6 rounded-2xl border shadow-sm flex flex-col lg:flex-row gap-6 items-center justify-center">
-          <div class="bg-slate-50 p-6 rounded-2xl border w-full lg:w-72 space-y-4">
+        <div class="bg-white p-6 rounded-2xl border shadow-sm flex flex-col lg:flex-row gap-6 items-start justify-center">
+          
+          <!-- Left panel: Hanzi Selector + Add New Hanzi -->
+          <div class="bg-slate-50 p-6 rounded-2xl border w-full lg:w-80 space-y-4">
             <div class="text-center space-y-2">
               <div id="hanziDisplay" class="text-6xl font-serif">你好</div>
               <div id="pinyinDisplay" class="text-lg font-bold text-indigo-600">nǐ hǎo</div>
               <p id="translationDisplay" class="text-xs text-slate-600">Здравствуйте</p>
-              <button onclick="speakCurrentHanzi()" class="w-full bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold hover:bg-indigo-700">Озвучить</button>
+              <button onclick="speakCurrentHanzi()" class="w-full bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold hover:bg-indigo-700">
+                <i class="fa-solid fa-volume-high mr-1"></i> Озвучить
+              </button>
             </div>
-            <div class="space-y-3 pt-4 border-t">
-              <label class="block text-xs font-bold text-slate-700">Выберите иероглиф для прописи:</label>
+
+            <div class="space-y-2 pt-4 border-t">
+              <label class="block text-xs font-bold text-slate-700">Выберите иероглиф из тетради:</label>
               <select id="hanziSelector" onchange="selectHanziChar(this.value)" class="w-full px-3 py-2 border rounded-xl text-xs font-medium bg-white">
-                <option value="你好|nǐ hǎo|Здравствуйте">你好 (nǐ hǎo)</option>
-                <option value="学习|xué xí|Учиться">学习 (xué xí)</option>
-                <option value="老师|lǎo shī|Учитель">老师 (lǎo shī)</option>
-                <option value="中国|zhōng guó|Китай">中国 (zhōng guó)</option>
+                <option value="你好|nǐ hǎo|Здравствуйте">你好 (nǐ hǎo) — Здравствуйте</option>
+                <option value="学习|xué xí|Учиться">学习 (xué xí) — Учиться</option>
+                <option value="老师|lǎo shī|Учитель">老师 (lǎo shī) — Учитель</option>
+                <option value="中国|zhōng guó|Китай">中国 (zhōng guó) — Китай</option>
               </select>
             </div>
+
+            <!-- Add Custom Hanzi Form -->
+            <div class="space-y-2 pt-4 border-t">
+              <p class="text-xs font-bold text-indigo-700"><i class="fa-solid fa-plus-circle mr-1"></i> Добавить новый иероглиф:</p>
+              <input type="text" id="newHanziChar" placeholder="Иероглиф (напр. 谢谢)" class="w-full px-3 py-2 border rounded-xl text-xs bg-white">
+              <input type="text" id="newHanziPinyin" placeholder="Пиньинь (напр. xiè xie)" class="w-full px-3 py-2 border rounded-xl text-xs bg-white">
+              <input type="text" id="newHanziMeaning" placeholder="Перевод (напр. Спасибо)" class="w-full px-3 py-2 border rounded-xl text-xs bg-white">
+              <button type="button" onclick="addNewHanziToNotebook()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-xl text-xs transition">
+                Добавить в тетрадь
+              </button>
+            </div>
           </div>
+
+          <!-- Right panel: Canvas -->
           <div class="flex flex-col items-center space-y-3">
             <div class="relative border-4 border-red-300 rounded-2xl overflow-hidden bg-red-50/20">
-              <canvas id="tianzigeCanvas" width="280" height="280" class="cursor-crosshair"></canvas>
+              <canvas id="tianzigeCanvas" width="300" height="300" class="cursor-crosshair"></canvas>
             </div>
             <div class="flex space-x-2 w-full">
               <button onclick="clearCanvas()" class="flex-1 px-4 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50">Очистить холст</button>
@@ -255,19 +291,19 @@
     </main>
   </div>
 
-  <!-- MODAL 1: COURSE BUILDER -->
+  <!-- MODAL 1: COURSE BUILDER (FIXED EDITING) -->
   <div id="courseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 overflow-y-auto">
     <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-4xl shadow-2xl space-y-6 border border-slate-200 my-8">
       <div class="flex justify-between items-center">
-        <h3 id="modalCourseTitle" class="text-lg font-black text-slate-900">Конструктор мультимедийных курсов и уроков</h3>
-        <button onclick="closeCourseModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
+        <h3 id="modalCourseTitle" class="text-lg font-black text-slate-900">Конструктор курсов и уроков</h3>
+        <button type="button" onclick="closeCourseModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
       </div>
 
-      <form onsubmit="handleSaveCourse(event)" class="space-y-4 max-h-[75vh] overflow-y-auto pr-2">
+      <form id="courseForm" onsubmit="handleSaveCourse(event)" class="space-y-4 max-h-[75vh] overflow-y-auto pr-2">
         <input type="hidden" id="editCourseId">
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Название курса</label>
-          <input type="text" id="courseTitle" required placeholder="например, Китайский HSK 2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="courseTitle" required placeholder="например, Китайский HSK 2 или IELTS 7.0+" class="w-full px-4 py-3 border rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
@@ -308,6 +344,57 @@
           <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow transition">Сохранить курс</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL 1.5: ENGLISH TEST BUILDER -->
+  <div id="englishTestModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 overflow-y-auto">
+    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-3xl shadow-2xl space-y-6 border border-slate-200 my-8">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black text-slate-900">Создать тест по английскому языку</h3>
+        <button type="button" onclick="closeEnglishTestModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
+      </div>
+
+      <form onsubmit="handleSaveEnglishTest(event)" class="space-y-4 max-h-[75vh] overflow-y-auto pr-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Название теста</label>
+            <input type="text" id="engTestTitle" required placeholder="напр. IELTS Placement Test / Grammar B2" class="w-full px-4 py-3 border rounded-xl text-xs font-medium">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Уровень / Тема</label>
+            <input type="text" id="engTestLevel" required placeholder="B1-B2 / Conditionals & Tenses" class="w-full px-4 py-3 border rounded-xl text-xs font-medium">
+          </div>
+        </div>
+
+        <div class="pt-2 border-t space-y-4">
+          <div class="flex justify-between items-center">
+            <h4 class="text-sm font-bold text-indigo-600">Вопросы теста</h4>
+            <button type="button" onclick="addEnglishQuestionBlock()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold">+ Добавить вопрос</button>
+          </div>
+          <div id="engQuestionsContainer" class="space-y-4"></div>
+        </div>
+
+        <div class="flex space-x-3 pt-4 border-t">
+          <button type="button" onclick="closeEnglishTestModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">Отмена</button>
+          <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow transition">Сохранить тест</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 1.6: ENGLISH TEST RUNNER (FOR STUDENTS) -->
+  <div id="englishTestRunnerModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+    <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-2xl shadow-2xl space-y-6 border border-slate-200 max-h-[85vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-3 border-b">
+        <div>
+          <span id="runnerTestLevel" class="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md uppercase">Уровень</span>
+          <h3 id="runnerTestTitle" class="text-xl font-black text-slate-900 mt-1">Название теста</h3>
+        </div>
+        <button onclick="closeEnglishTestRunner()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">×</button>
+      </div>
+      <div id="runnerQuestionsList" class="space-y-5"></div>
+      <button onclick="submitEnglishTestAnswers()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-xs shadow transition">Завершить тест и узнать результат</button>
     </div>
   </div>
 
@@ -413,7 +500,7 @@
     </div>
   </div>
 
-  <!-- Firebase Integration with robust error handling -->
+  <!-- Firebase Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -430,15 +517,9 @@
       measurementId: "G-14HG96TRRW"
     };
 
-    let app, auth, db;
-    try {
-      app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      db = getDatabase(app);
-      console.log("Firebase initialized successfully");
-    } catch (err) {
-      console.error("Firebase init error:", err);
-    }
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
 
     let authMode = 'login';
     let currentUser = null;
@@ -446,9 +527,11 @@
     let currentUserName = '';
     let globalCoursesStore = {};
     let globalUsersStore = {};
+    let globalEngTestsStore = {};
     let activeCourseId = null;
     let activeLessonIdx = null;
     let activeLessonObj = null;
+    let activeTestId = null;
 
     window.switchAuthMode = (mode) => {
       authMode = mode;
@@ -458,7 +541,6 @@
       document.getElementById('authBtn').innerText = mode === 'login' ? 'Войти в кабинет' : 'Создать учетную запись';
     };
 
-    // FIXED AUTH FUNCTION WITH EXPLICIT ERROR HANDLING & BUTTON STATES
     window.handleAuth = async (e) => {
       e.preventDefault();
       const email = document.getElementById('authEmail').value.trim();
@@ -483,14 +565,11 @@
           await signInWithEmailAndPassword(auth, email, pass);
         }
       } catch (err) {
-        console.error("Auth error:", err.code, err.message);
         let msg = 'Ошибка входа: ' + err.message;
         if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
           msg = 'Неверный email или пароль.';
         } else if (err.code === 'auth/email-already-in-use') {
           msg = 'Этот email уже зарегистрирован.';
-        } else if (err.code === 'auth/weak-password') {
-          msg = 'Пароль слишком слабый (минимум 6 символов).';
         }
         alert(msg);
         authBtn.innerText = authMode === 'login' ? 'Войти в кабинет' : 'Создать учетную запись';
@@ -500,59 +579,57 @@
 
     window.logout = () => signOut(auth);
 
-    if (auth) {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          currentUser = user;
-          document.getElementById('authScreen').classList.add('hidden');
-          document.getElementById('appScreen').classList.remove('hidden');
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('appScreen').classList.remove('hidden');
 
-          onValue(ref(db, 'users'), (snapshot) => {
-            globalUsersStore = snapshot.val() || {};
-            let userData = globalUsersStore[user.uid];
-            
-            // If user record doesn't exist in DB yet, create default
-            if (!userData) {
-              userData = { name: user.email.split('@')[0], email: user.email, role: 'student' };
-              set(ref(db, 'users/' + user.uid), userData);
-            }
-
-            currentUserRole = userData.role || 'student';
-            currentUserName = userData.name || user.email;
-            const isAdmin = currentUserRole === 'admin' || currentUserRole === 'teacher';
-            
-            document.getElementById('profileNameDisplay').innerText = currentUserName;
-            document.getElementById('profileRoleDisplay').innerText = currentUserRole.toUpperCase();
-            document.getElementById('welcomeHeader').innerText = `С возвращением, ${currentUserName}!`;
-            document.getElementById('userAvatar').innerText = currentUserName.substring(0, 2).toUpperCase();
-
-            document.querySelectorAll('.admin-only').forEach(el => {
-              el.classList.toggle('hidden', !isAdmin);
-            });
-            document.getElementById('adminBadge').classList.toggle('hidden', !isAdmin);
-            document.getElementById('studentHwPane').classList.toggle('hidden', isAdmin);
-            document.getElementById('teacherHwPane').classList.toggle('hidden', !isAdmin);
-
-            if (isAdmin) {
-              loadAllUsersAdmin();
-              loadTeacherSubmissions();
-              loadAttendanceJournal();
-            }
-            loadTeachersDropdown();
-            loadCourses();
-          });
-        } else {
-          currentUser = null;
-          document.getElementById('authScreen').classList.remove('hidden');
-          document.getElementById('appScreen').classList.add('hidden');
-          const authBtn = document.getElementById('authBtn');
-          if (authBtn) {
-            authBtn.innerText = authMode === 'login' ? 'Войти в кабинет' : 'Создать учетную запись';
-            authBtn.disabled = false;
+        onValue(ref(db, 'users'), (snapshot) => {
+          globalUsersStore = snapshot.val() || {};
+          let userData = globalUsersStore[user.uid];
+          if (!userData) {
+            userData = { name: user.email.split('@')[0], email: user.email, role: 'student' };
+            set(ref(db, 'users/' + user.uid), userData);
           }
+
+          currentUserRole = userData.role || 'student';
+          currentUserName = userData.name || user.email;
+          const isAdmin = currentUserRole === 'admin' || currentUserRole === 'teacher';
+          
+          document.getElementById('profileNameDisplay').innerText = currentUserName;
+          document.getElementById('profileRoleDisplay').innerText = currentUserRole.toUpperCase();
+          document.getElementById('welcomeHeader').innerText = `С возвращением, ${currentUserName}!`;
+          document.getElementById('userAvatar').innerText = currentUserName.substring(0, 2).toUpperCase();
+
+          document.querySelectorAll('.admin-only').forEach(el => {
+            el.classList.toggle('hidden', !isAdmin);
+          });
+          document.getElementById('adminBadge').classList.toggle('hidden', !isAdmin);
+          document.getElementById('studentHwPane').classList.toggle('hidden', isAdmin);
+          document.getElementById('teacherHwPane').classList.toggle('hidden', !isAdmin);
+
+          if (isAdmin) {
+            loadAllUsersAdmin();
+            loadTeacherSubmissions();
+            loadAttendanceJournal();
+          }
+          loadTeachersDropdown();
+          loadCourses();
+          loadEnglishTests();
+          loadCustomHanziList();
+        });
+      } else {
+        currentUser = null;
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('appScreen').classList.add('hidden');
+        const authBtn = document.getElementById('authBtn');
+        if (authBtn) {
+          authBtn.innerText = authMode === 'login' ? 'Войти в кабинет' : 'Создать учетную запись';
+          authBtn.disabled = false;
         }
-      });
-    }
+      }
+    });
 
     function loadTeachersDropdown() {
       const select = document.getElementById('courseTeacher');
@@ -561,6 +638,7 @@
       select.innerHTML = '<option value="">-- Выберите преподавателя --</option>' + teachers.map(t => `<option value="${t.name}">${t.name} (${t.email})</option>`).join('');
     }
 
+    // FIXED COURSE MODAL OPENING & EDITING
     window.openCourseModal = (courseId = null) => {
       loadTeachersDropdown();
       const container = document.getElementById('lessonsContainer');
@@ -575,10 +653,12 @@
         document.getElementById('courseTeacher').value = c.teacher || '';
         document.getElementById('courseDesc').value = c.desc || '';
         document.getElementById('courseSchedule').value = c.schedule || '';
-        document.getElementById('modalCourseTitle').innerText = 'Редактирование курса';
+        document.getElementById('modalCourseTitle').innerText = 'Редактирование курса: ' + (c.title || '');
 
-        if (c.materials && c.materials.length > 0) {
+        if (Array.isArray(c.materials) && c.materials.length > 0) {
           c.materials.forEach(m => addLessonBlock(m));
+        } else if (c.materials && typeof c.materials === 'object') {
+          Object.values(c.materials).forEach(m => addLessonBlock(m));
         } else {
           addLessonBlock();
         }
@@ -609,26 +689,26 @@
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-600 mb-1">Название урока</label>
-          <input type="text" placeholder="Урок 1" value="${data.title || ''}" class="les-title w-full px-3 py-2 border rounded-xl text-xs font-bold">
+          <input type="text" placeholder="Урок 1" value="${(data.title || '').replace(/"/g, '&quot;')}" class="les-title w-full px-3 py-2 border rounded-xl text-xs font-bold">
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-brands fa-youtube text-red-500 mr-1"></i> YouTube ссылка</label>
-            <input type="text" placeholder="https://youtube.com/watch?v=..." value="${data.videoUrl || ''}" class="les-video w-full px-3 py-2 border rounded-xl text-xs">
+            <input type="text" placeholder="https://youtube.com/watch?v=..." value="${(data.videoUrl || '').replace(/"/g, '&quot;')}" class="les-video w-full px-3 py-2 border rounded-xl text-xs">
           </div>
           <div>
             <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-volume-high text-amber-500 mr-1"></i> Аудио ссылка (MP3)</label>
-            <input type="text" placeholder="https://example.com/audio.mp3" value="${data.audioUrl || ''}" class="les-audio w-full px-3 py-2 border rounded-xl text-xs">
+            <input type="text" placeholder="https://example.com/audio.mp3" value="${(data.audioUrl || '').replace(/"/g, '&quot;')}" class="les-audio w-full px-3 py-2 border rounded-xl text-xs">
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-image text-emerald-500 mr-1"></i> Картинка / Схема</label>
-            <input type="text" placeholder="https://example.com/image.png" value="${data.imageUrl || ''}" class="les-image w-full px-3 py-2 border rounded-xl text-xs">
+            <input type="text" placeholder="https://example.com/image.png" value="${(data.imageUrl || '').replace(/"/g, '&quot;')}" class="les-image w-full px-3 py-2 border rounded-xl text-xs">
           </div>
           <div>
             <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-pen-nib text-purple-500 mr-1"></i> Вставка слова</label>
-            <input type="text" placeholder="Напр: 你好, ___" value="${data.fillWord || ''}" class="les-fill w-full px-3 py-2 border rounded-xl text-xs">
+            <input type="text" placeholder="Напр: 你好, ___" value="${(data.fillWord || '').replace(/"/g, '&quot;')}" class="les-fill w-full px-3 py-2 border rounded-xl text-xs">
           </div>
         </div>
         <div>
@@ -637,15 +717,15 @@
         </div>
         <div class="p-3 bg-indigo-50/60 rounded-xl border border-indigo-100 space-y-2">
           <label class="block text-[11px] font-bold text-indigo-900"><i class="fa-solid fa-circle-question mr-1"></i> Тест / Опрос</label>
-          <input type="text" placeholder="Вопрос" value="${data.quizQuestion || ''}" class="les-quiz-q w-full px-3 py-2 border rounded-xl text-xs bg-white">
-          <input type="text" placeholder="Варианты через запятую" value="${data.quizOptions || ''}" class="les-quiz-opt w-full px-3 py-2 border rounded-xl text-xs bg-white">
-          <input type="text" placeholder="Правильный ответ" value="${data.quizAnswer || ''}" class="les-quiz-ans w-full px-3 py-2 border rounded-xl text-xs bg-white">
+          <input type="text" placeholder="Вопрос" value="${(data.quizQuestion || '').replace(/"/g, '&quot;')}" class="les-quiz-q w-full px-3 py-2 border rounded-xl text-xs bg-white">
+          <input type="text" placeholder="Варианты через запятую" value="${(data.quizOptions || '').replace(/"/g, '&quot;')}" class="les-quiz-opt w-full px-3 py-2 border rounded-xl text-xs bg-white">
+          <input type="text" placeholder="Правильный ответ" value="${(data.quizAnswer || '').replace(/"/g, '&quot;')}" class="les-quiz-ans w-full px-3 py-2 border rounded-xl text-xs bg-white">
         </div>
       `;
       container.appendChild(div);
     };
 
-    window.handleSaveCourse = (e) => {
+    window.handleSaveCourse = async (e) => {
       e.preventDefault();
       const id = document.getElementById('editCourseId').value;
       const title = document.getElementById('courseTitle').value;
@@ -672,15 +752,18 @@
 
       const courseData = { title, category, level, teacher, desc, schedule, materials };
 
-      if (id) {
-        update(ref(db, `courses/${id}`), courseData);
-        alert('Курс обновлен!');
-      } else {
-        push(ref(db, 'courses'), courseData);
-        alert('Курс создан!');
+      try {
+        if (id) {
+          await update(ref(db, `courses/${id}`), courseData);
+          alert('Курс успешно обновлен!');
+        } else {
+          await push(ref(db, 'courses'), courseData);
+          alert('Курс успешно создан!');
+        }
+        closeCourseModal();
+      } catch (err) {
+        alert('Ошибка сохранения: ' + err.message);
       }
-      closeCourseModal();
-      e.target.reset();
     };
 
     function loadCourses() {
@@ -724,9 +807,9 @@
               <div class="pt-3 border-t flex justify-between items-center text-xs text-slate-600 font-semibold">
                 <span><i class="fa-solid fa-clock text-slate-400 mr-1"></i> ${c.schedule}</span>
                 ${isAdmin ? `
-                  <div class="flex items-center space-x-2">
-                    <button onclick="event.stopPropagation(); openCourseModal('${key}')" class="px-2.5 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-pen mr-1"></i>Ред.</button>
-                    <button onclick="event.stopPropagation(); deleteCourse('${key}')" class="text-rose-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash"></i></button>
+                  <div class="flex items-center space-x-2 z-10">
+                    <button type="button" onclick="event.stopPropagation(); openCourseModal('${key}')" class="px-3 py-1.5 bg-amber-100 text-amber-800 hover:bg-amber-200 rounded-lg text-[11px] font-bold shadow-sm"><i class="fa-solid fa-pen mr-1"></i>Редактировать</button>
+                    <button type="button" onclick="event.stopPropagation(); deleteCourse('${key}')" class="text-rose-500 hover:text-rose-700 p-1.5"><i class="fa-solid fa-trash"></i></button>
                   </div>
                 ` : ''}
               </div>
@@ -736,6 +819,183 @@
       });
     }
 
+    // ENGLISH TESTS BUILDER & RUNNER LOGIC
+    window.openEnglishTestModal = () => {
+      const container = document.getElementById('engQuestionsContainer');
+      container.innerHTML = '';
+      addEnglishQuestionBlock();
+      document.getElementById('englishTestModal').classList.remove('hidden');
+    };
+
+    window.closeEnglishTestModal = () => document.getElementById('englishTestModal').classList.add('hidden');
+
+    window.addEnglishQuestionBlock = () => {
+      const container = document.getElementById('engQuestionsContainer');
+      const div = document.createElement('div');
+      div.className = 'bg-slate-50 p-4 rounded-2xl border space-y-2 relative';
+      div.innerHTML = `
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-bold text-indigo-600">Вопрос по английскому</span>
+          <button type="button" onclick="this.parentElement.parentElement.remove()" class="text-rose-500 text-xs font-bold">Удалить</button>
+        </div>
+        <input type="text" required placeholder="Текст вопроса (напр. If I ___ rich, I would travel.)" class="eng-q-text w-full px-3 py-2 border rounded-xl text-xs bg-white">
+        <input type="text" required placeholder="Варианты через запятую (напр. am, was, were, will be)" class="eng-q-opts w-full px-3 py-2 border rounded-xl text-xs bg-white">
+        <input type="text" required placeholder="Правильный ответ (напр. were)" class="eng-q-ans w-full px-3 py-2 border rounded-xl text-xs bg-white">
+      `;
+      container.appendChild(div);
+    };
+
+    window.handleSaveEnglishTest = async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('engTestTitle').value;
+      const level = document.getElementById('engTestLevel').value;
+      const questions = [];
+
+      document.querySelectorAll('#engQuestionsContainer > div').forEach(row => {
+        questions.push({
+          question: row.querySelector('.eng-q-text').value,
+          options: row.querySelector('.eng-q-opts').value.split(',').map(s => s.trim()),
+          answer: row.querySelector('.eng-q-ans').value.trim()
+        });
+      });
+
+      await push(ref(db, 'englishTests'), { title, level, questions, author: currentUserName });
+      alert('Тест по английскому языку сохранен!');
+      closeEnglishTestModal();
+    };
+
+    function loadEnglishTests() {
+      onValue(ref(db, 'englishTests'), (snapshot) => {
+        const data = snapshot.val();
+        globalEngTestsStore = data || {};
+        const grid = document.getElementById('englishTestsGrid');
+        if (!data) {
+          grid.innerHTML = '<p class="text-xs text-slate-400">Тесты по английскому пока не созданы.</p>';
+          document.getElementById('statTestsCount').innerText = '0';
+          return;
+        }
+        const keys = Object.keys(data);
+        document.getElementById('statTestsCount').innerText = keys.length;
+        const isAdmin = currentUserRole === 'admin' || currentUserRole === 'teacher';
+
+        grid.innerHTML = keys.map(key => {
+          const t = data[key];
+          const qCount = t.questions ? t.questions.length : 0;
+          return `
+            <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <span class="bg-indigo-100 text-indigo-800 text-[10px] font-extrabold px-2.5 py-1 rounded-md">${t.level}</span>
+                  <span class="text-xs text-slate-400 font-semibold">${qCount} вопросов</span>
+                </div>
+                <h4 class="font-bold text-base text-slate-900">${t.title}</h4>
+              </div>
+              <div class="pt-3 border-t flex justify-between items-center">
+                <button onclick="openEnglishTestRunner('${key}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow">Пройти тест</button>
+                ${isAdmin ? `<button onclick="deleteEnglishTest('${key}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold"><i class="fa-solid fa-trash"></i></button>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      });
+    }
+
+    window.deleteEnglishTest = (key) => {
+      if (confirm('Удалить тест?')) remove(ref(db, `englishTests/${key}`));
+    };
+
+    window.openEnglishTestRunner = (testId) => {
+      activeTestId = testId;
+      const t = globalEngTestsStore[testId];
+      if (!t) return;
+      document.getElementById('runnerTestTitle').innerText = t.title;
+      document.getElementById('runnerTestLevel').innerText = t.level;
+      const list = document.getElementById('runnerQuestionsList');
+      list.innerHTML = (t.questions || []).map((q, idx) => `
+        <div class="p-4 bg-slate-50 rounded-2xl border space-y-2">
+          <p class="text-xs font-bold text-slate-800">${idx + 1}. ${q.question}</p>
+          <div class="space-y-1.5">
+            ${q.options.map(opt => `
+              <label class="flex items-center space-x-2 p-2 bg-white rounded-xl border text-xs cursor-pointer hover:bg-indigo-50">
+                <input type="radio" name="engQ_${idx}" value="${opt}" class="text-indigo-600">
+                <span>${opt}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('englishTestRunnerModal').classList.remove('hidden');
+    };
+
+    window.closeEnglishTestRunner = () => document.getElementById('englishTestRunnerModal').classList.add('hidden');
+
+    window.submitEnglishTestAnswers = () => {
+      const t = globalEngTestsStore[activeTestId];
+      if (!t) return;
+      let score = 0;
+      const total = t.questions.length;
+
+      t.questions.forEach((q, idx) => {
+        const selected = document.querySelector(`input[name="engQ_${idx}"]:checked`);
+        if (selected && selected.value.trim().toLowerCase() === q.answer.trim().toLowerCase()) {
+          score++;
+        }
+      });
+
+      push(ref(db, 'homeworks'), {
+        uid: currentUser.uid,
+        email: currentUser.email,
+        comment: `Тест по английскому: "${t.title}". Результат: ${score} из ${total}`,
+        img: null,
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        status: 'Проверено',
+        grade: `${score}/${total}`
+      });
+
+      alert(`Тест завершен! Ваш результат: ${score} из ${total}`);
+      closeEnglishTestRunner();
+    };
+
+    // TIANZIGE CUSTOM HANZI ADDITION
+    window.addNewHanziToNotebook = async () => {
+      const char = document.getElementById('newHanziChar').value.trim();
+      const pinyin = document.getElementById('newHanziPinyin').value.trim();
+      const meaning = document.getElementById('newHanziMeaning').value.trim();
+
+      if (!char || !pinyin || !meaning) {
+        alert('Заполните иероглиф, пиньинь и перевод!');
+        return;
+      }
+
+      await push(ref(db, 'customHanzi'), { char, pinyin, meaning });
+      document.getElementById('newHanziChar').value = '';
+      document.getElementById('newHanziPinyin').value = '';
+      document.getElementById('newHanziMeaning').value = '';
+      alert(`Иероглиф "${char}" добавлен в тетрадь прописей!`);
+    };
+
+    function loadCustomHanziList() {
+      onValue(ref(db, 'customHanzi'), (snapshot) => {
+        const data = snapshot.val();
+        const selector = document.getElementById('hanziSelector');
+        const baseOptions = `
+          <option value="你好|nǐ hǎo|Здравствуйте">你好 (nǐ hǎo) — Здравствуйте</option>
+          <option value="学习|xué xí|Учиться">学习 (xué xí) — Учиться</option>
+          <option value="老师|lǎo shī|Учитель">老师 (lǎo shī) — Учитель</option>
+          <option value="中国|zhōng guó|Китай">中国 (zhōng guó) — Китай</option>
+        `;
+        if (!data) {
+          selector.innerHTML = baseOptions;
+          return;
+        }
+        const customOptions = Object.values(data).map(item => 
+          `<option value="${item.char}|${item.pinyin}|${item.meaning}">${item.char} (${item.pinyin}) — ${item.meaning}</option>`
+        ).join('');
+        selector.innerHTML = baseOptions + customOptions;
+      });
+    }
+
+    // COURSE VIEWER & LESSON PLAYER
     window.openCourseViewer = (courseId) => {
       activeCourseId = courseId;
       if (!globalCoursesStore[courseId]) return;
@@ -1116,7 +1376,7 @@
     }
 
     window.switchTab = (tab) => {
-      ['dashboard', 'courses', 'attendance', 'homework', 'users', 'tianzige'].forEach(t => {
+      ['dashboard', 'courses', 'englishTests', 'attendance', 'homework', 'users', 'tianzige'].forEach(t => {
         const el = document.getElementById('tabContent' + t.charAt(0).toUpperCase() + t.slice(1));
         if (el) el.classList.toggle('hidden', t !== tab);
       });
